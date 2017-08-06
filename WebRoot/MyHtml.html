@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MyHtml.html</title>
+
+<meta name="keywords" content="keyword1,keyword2,keyword3">
+<meta name="description" content="this is my page">
+<meta name="content-type" content="text/html; charset=UTF-8">
+
+<!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+<script src="http://202.136.208.185:8082/MSAAPI/MSAchartApiWeb.js"
+	type="text/javascript">
+	
+</script>
+<script src="http://202.136.208.185:8082/MSAAPI/Yima_JsGraphics.js"
+	type="text/javascript">
+	
+</script>
+<script src="http://202.136.208.185:8082/MSAAPI/Grapgics.js"
+	type="text/javascript">
+	
+</script>
+
+<script type="text/javascript">
+	/*初始化海图*/
+	function initMap() {
+		msaChartOptions = new MSAChartOptions();
+		msaChartOptions.scale = 1280000;
+		msaChartOptions.longitude = 122.397428;
+		msaChartOptions.latitude = 29.90923;
+		msaChartObj = new MSAChart("mainDiv", msaChartOptions);
+
+	}
+</script>
+</head>
+
+<body onload="initMap();">
+	<!-- 海图区域 
+	<div id="seamap" style="width:960px; height:856px;"></div>
+	-->
+	<div id="mainDiv" style="width: 660px; height: 356px;"
+		onclick="resetPoint();drawImg();">
+		<div id="makrDiv"
+			style="position:absolute; z-index:202; left:0px; top:0px;"></div>
+		<div id="imgDiv"
+			style="position:absolute; z-index:501; left:0px; top:0px;"></div>
+	</div>
+</body>
+</html>

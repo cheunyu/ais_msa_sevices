@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.scyb.aisweather.webservice.bo.CallRecord" table="CALL_RECORD" schema="WEBSERVICE">
+        <id name="guid">
+            <column name="GUID" sql-type="varchar2" length="64" not-null="true"/>
+        </id>
+        <property name="username">
+            <column name="USERNAME" sql-type="varchar2" length="32"/>
+        </property>
+        <property name="calltime">
+            <column name="CALLTIME" sql-type="timestamp(6)"/>
+        </property>
+        <property name="servername">
+            <column name="SERVERNAME" sql-type="varchar2" length="32"/>
+        </property>
+        <property name="serverparams">
+            <column name="SERVERPARAMS" sql-type="varchar2" length="2000"/>
+        </property>
+        <property name="vdl">
+            <column name="VDL" sql-type="varchar2" length="400"/>
+        </property>
+    </class>
+</hibernate-mapping>

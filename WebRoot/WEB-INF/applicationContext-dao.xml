@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!--
+	<bean id="staDaoImpl" class="com.scyb.aisweather.template.dao.impl.StationDaoImpl">
+		<property name="sessionFactory" ref="companySessionFactory" />
+	</bean>
+	
+
+	<bean id="temDaoImpl" class="com.scyb.aisweather.template.dao.impl.TemplateDaoImpl">
+		<property name="sessionFactory" ref="companySessionFactory" />
+	</bean>
+	
+
+	<bean id="msgValueDaoImpl" class="com.scyb.aisweather.message.dao.impl.MessageValueDaoImpl">
+		<property name="sessionFactory" ref="companySessionFactory" />
+	</bean>
+	 -->
+	<bean id="coastalDaoImpl" class="com.scyb.aisweather.webservice.dao.impl.CoastalDaoImpl">
+		<property name="sessionFactory" ref="companySessionFactory" />
+	</bean>
+
+    <bean id="oceanDaoImpl" class="com.scyb.aisweather.webservice.dao.impl.OceanDaoImpl">
+        <property name="sessionFactory" ref="companySessionFactory" />
+    </bean>
+
+    <bean id="offshoreDaoImpl" class="com.scyb.aisweather.webservice.dao.impl.OffshoreDaoImpl">
+        <property name="sessionFactory" ref="companySessionFactory" />
+    </bean>
+</beans>

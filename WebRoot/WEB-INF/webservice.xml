@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<bean id="tropicalCycloneWarn"
+		class="com.scyb.aisweather.webservice.impl.TropicalCycloneWarnImpl">
+		<property name="mwwServiceImpl" ref="mwwServiceImpl"></property>
+	</bean>
+
+	<bean id="windWarn" class="com.scyb.aisweather.webservice.impl.WindWarnImpl">
+		<property name="mwwServiceImpl" ref="mwwServiceImpl"></property>
+	</bean>
+
+	<bean id="waveWarn" class="com.scyb.aisweather.webservice.impl.WaveWarnImpl">
+		<property name="mwwServiceImpl" ref="mwwServiceImpl"></property>
+	</bean>
+
+	<bean id="stormSurgeWarn" class="com.scyb.aisweather.webservice.impl.StormSurgeWarnImpl">
+		<property name="mwwServiceImpl" ref="mwwServiceImpl"></property>
+	</bean>
+
+	<bean id="seaIceWarn" class="com.scyb.aisweather.webservice.impl.SeaIceWarnImpl">
+		<property name="mwwServiceImpl" ref="mwwServiceImpl"></property>
+	</bean>
+
+	<bean id="fogWarn" class="com.scyb.aisweather.webservice.impl.FogWarnImpl">
+		<property name="mwwServiceImpl" ref="mwwServiceImpl"></property>
+	</bean>
+
+	<bean id="coldWarn" class="com.scyb.aisweather.webservice.impl.ColdWarnImpl">
+		<property name="mwwServiceImpl" ref="mwwServiceImpl"></property>
+	</bean>
+
+	<bean id="hwf"
+		class="com.scyb.aisweather.webservice.impl.HydrologyWeatherForecastImpl">
+		<property name="hwfServiceImpl" ref="hwfServiceImpl"></property>
+	</bean>
+
+	<bean id="baseAmd"
+		class="com.scyb.aisweather.webservice.impl.BaseAidsMarkedDynamicImpl">
+		<property name="amdServiceImpl" ref="amdServiceImpl"></property>
+	</bean>
+
+	<bean id="shiftAmd"
+		class="com.scyb.aisweather.webservice.impl.ShiftAidsMarkedDynamicImpl">
+		<property name="amdServiceImpl" ref="amdServiceImpl"></property>
+	</bean>
+
+	<bean id="lightAmd"
+		class="com.scyb.aisweather.webservice.impl.LightAidsMarkedDynamicImpl">
+		<property name="amdServiceImpl" ref="amdServiceImpl"></property>
+	</bean>
+
+	<bean id="dgpsAmd"
+		class="com.scyb.aisweather.webservice.impl.DgpsAidsMarkedDynamicImpl">
+		<property name="amdServiceImpl" ref="amdServiceImpl"></property>
+	</bean>
+
+	<bean id="nav" class="com.scyb.aisweather.webservice.impl.NavigationImpl">
+		<property name="navServiceImpl" ref="navServiceImpl"></property>
+	</bean>
+
+	<bean id="cw"
+		class="com.scyb.aisweather.webservice.impl.ConstructionWorkImpl">
+		<property name="cwServiceImpl" ref="cwServiceImpl"></property>
+	</bean>
+
+	<bean id="ht" class="com.scyb.aisweather.webservice.impl.HeavyTowImpl">
+		<property name="htServiceImpl" ref="htServiceImpl"></property>
+	</bean>
+
+	<bean id="ma"
+		class="com.scyb.aisweather.webservice.impl.MilitaryActivitiyImpl">
+		<property name="maServiceImpl" ref="maServiceImpl"></property>
+	</bean>
+
+	<bean id="ds" class="com.scyb.aisweather.webservice.impl.DistressShipImpl">
+		<property name="sdServiceImpl" ref="sdServiceImpl"></property>
+	</bean>
+
+	<bean id="dr" class="com.scyb.aisweather.webservice.impl.DemarcatedRoundImpl">
+		<property name="daServiceImpl" ref="daServiceImpl"></property>
+	</bean>
+
+	<bean id="drl"
+		class="com.scyb.aisweather.webservice.impl.DemarcatedRectangleImpl">
+		<property name="daServiceImpl" ref="daServiceImpl"></property>
+	</bean>
+
+	<bean id="dia"
+		class="com.scyb.aisweather.webservice.impl.DemarcatedIrregulaAreaImpl">
+		<property name="diaServiceImpl" ref="diaServiceImpl"></property>
+	</bean>
+
+	<bean id="text"
+		class="com.scyb.aisweather.webservice.impl.TextImpl">
+		<property name="textServiceImpl" ref="textServiceImpl"></property>
+	</bean>
+
+    <bean id="mef"
+          class="com.scyb.aisweather.webservice.impl.MarineEnvironmentForecastImpl">
+		<property name="mefServiceImpl" ref="mefServiceImpl"></property>
+    </bean>
+
+    <bean id="mwf"
+          class="com.scyb.aisweather.webservice.impl.MarineWeatherForecastImpl">
+		<property name="mwfServiceImpl" ref="mwfServiceImpl"></property>
+    </bean>
+
+    <bean id="itext"
+          class="com.scyb.aisweather.webservice.impl.InternationalTextImpl">
+		<property name="textServiceImpl" ref="textServiceImpl"></property>
+    </bean>
+
+	<bean id="coastal"
+		  class="com.scyb.aisweather.webservice.impl.CoastalServiceImpl">
+		<property name="coastalDaoImpl" ref="coastalDaoImpl"></property>
+	</bean>
+
+	<bean id="ocean"
+		  class="com.scyb.aisweather.webservice.impl.OceanServiceImpl">
+		<property name="oceanDaoImpl" ref="oceanDaoImpl"></property>
+	</bean>
+
+	<bean id="offshore"
+		  class="com.scyb.aisweather.webservice.impl.OffshoreServiceImpl">
+		<property name="offshoreDaoImpl" ref="offshoreDaoImpl"></property>
+	</bean>
+
+	<!-- JAX-WS -->
+	<jaxws:endpoint implementor="#tropicalCycloneWarn"
+		address="/tropicalCycloneWarn" publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#windWarn" address="/windWarn"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#waveWarn" address="/waveWarn"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#stormSurgeWarn" address="/stormSurgeWarn"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#seaIceWarn" address="/seaIceWarn"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#fogWarn" address="/fogWarn"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#coldWarn" address="/coldWarn"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#hwf" address="/hwf"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#baseAmd" address="/baseAmd"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#shiftAmd" address="/shiftAmd"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#lightAmd" address="/lightAmd"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#dgpsAmd" address="/dgpsAmd"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#nav" address="/nav"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#cw" address="/cw" publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#ht" address="/ht" publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#ma" address="/ma" publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#ds" address="/ds" publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#dr" address="/dr" publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#drl" address="/drl"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#dia" address="/dia"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#text" address="/text"
+		publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+    <jaxws:endpoint implementor="#mef" address="/mef"
+                    publish="true">
+        <jaxws:inInterceptors>
+            <bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+            <bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+                <constructor-arg>
+                    <map>
+                        <entry key="action" value="UsernameToken" />
+                        <entry key="passwordType" value="PasswordText" />
+                        <entry key="passwordCallbackClass"
+                               value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+                    </map>
+                </constructor-arg>
+            </bean>
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint implementor="#mwf" address="/mwf"
+                    publish="true">
+        <jaxws:inInterceptors>
+            <bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+            <bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+                <constructor-arg>
+                    <map>
+                        <entry key="action" value="UsernameToken" />
+                        <entry key="passwordType" value="PasswordText" />
+                        <entry key="passwordCallbackClass"
+                               value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+                    </map>
+                </constructor-arg>
+            </bean>
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint implementor="#itext" address="/itext"
+                    publish="true">
+        <jaxws:inInterceptors>
+            <bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+            <bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+                <constructor-arg>
+                    <map>
+                        <entry key="action" value="UsernameToken" />
+                        <entry key="passwordType" value="PasswordText" />
+                        <entry key="passwordCallbackClass"
+                               value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+                    </map>
+                </constructor-arg>
+            </bean>
+        </jaxws:inInterceptors>
+    </jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#coastal"
+					address="/coastal" publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							   value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#ocean"
+					address="/ocean" publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							   value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<jaxws:endpoint implementor="#offshore"
+					address="/offshore" publish="true">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordText" />
+						<entry key="passwordCallbackClass"
+							   value="com.scyb.aisweather.webservice.util.WsAuthHandler" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+</beans>

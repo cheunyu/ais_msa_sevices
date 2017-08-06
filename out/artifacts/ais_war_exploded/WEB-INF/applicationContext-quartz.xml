@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- scan netcdf file exist service -->
+	<bean id="decompressNetCdfServiceImpl"
+		class="com.scyb.aisweather.common.service.impl.DecompressNetCdfServiceImpl"></bean>
+	<bean id="scanNetCdf"
+		class="com.scyb.aisweather.common.service.impl.ScanNetCdfServiceImpl">
+		<property name="decompressNetCdfFileImpl" ref="decompressNetCdfServiceImpl"></property>
+	</bean>
+	<!-- scan nc file Job -->
+	<bean id="scanNetCdfJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref local="scanNetCdf" />
+		</property>
+		<property name="targetMethod">
+			<value>scan</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!-- scan nc file -->
+	<bean id="scanNetCdfJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scanNetCdfJob" />
+		</property>
+		<property name="cronExpression">
+			<value>*/5 * * * * ?</value>
+		</property>
+	</bean>
+
+	<!-- startup job -->
+	<bean id="start"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="scanNetCdfJobTrigger" />
+			</list>
+		</property>
+	</bean>
+</beans>

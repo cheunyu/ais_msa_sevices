@@ -1,0 +1,1442 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AIS二进制播放</title>
+<link rel="stylesheet" type="text/css" href="./styles/style.css">
+<link rel="stylesheet" href="./styles/jquery-ui.css">
+<script src="./js/util/jquery-1.10.2.js"></script>
+<script src="./js/util/jquery-ui.js"></script>
+<script src="./js/util/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="./js/util/xmlhttp.js"></script>
+<script type="text/javascript" src="./js/broadcast/netcdf-datetime.js"></script>
+<script type="text/javascript" src="./js/broadcast/initialize.js"></script>
+</head>
+
+<body onload="init();">
+	<div id="messages"></div>
+	<div class="main">
+		<div id="tabs">
+			<div class="leftBox">
+				<ul>
+					<li><a href="#tabs-1" onClick="mmDateTimeFn();">海洋气象预报</a></li>
+					<li><a href="#tabs-2" onClick="mefDateTimeFn();">海洋环境预报</a></li>
+					<li><a href="#tabs-3">海洋气象预警</a></li>
+					<li><a href="#tabs-4">水文气象预报</a></li>
+					<li><a href="#tabs-5">助行标注动态</a></li>
+					<li><a href="#tabs-6">碍航物信息</a></li>
+					<li><a href="#tabs-7">施工作业</a></li>
+					<li><a href="#tabs-8">笨重拖带</a></li>
+					<li><a href="#tabs-9">演习、打靶、海上军事活动</a></li>
+					<li><a href="#tabs-10">船舶遇险</a></li>
+					<li><a href="#tabs-11">划定区域（圆形、矩形）</a></li>
+					<li><a href="#tabs-12">划定区域（不规则）</a></li>
+					<!-- <li><a href="#tabs-13">气象采集</a></li> -->
+					<!-- <li><a href="#tabs-14">航线推荐（船舶请求）</a></li> -->
+					<li><a href="#tabs-15">航线推荐</a></li>
+					<!-- <li><a href="#tabs-16">航线气象（船舶请求）</a></li> -->
+					<!-- <li><a href="#tabs-17">航线气象</a></li> -->
+					<!-- <li><a href="#tabs-18">港口状况（船舶请求）</a></li> -->
+					<li><a href="#tabs-19">港口及锚地状况</a></li>
+					<li><a href="#tabs-20">扩展船舶静态数据和航行相关信息（报告请求）</a></li>
+					<!-- <li><a href="#tabs-21">船舶报告</a></li> -->
+					<li><a href="#tabs-22">中英文播发</a></li>
+					<!-- <li><a href="#tabs-23">航标遥测遥控</a></li> -->
+				</ul>
+			</div>
+			<div class="rightBox">
+				<!--海洋气象预报-->
+				<div id="tabs-1">
+					<form action="sendMessage/sendMwfAction.action" method="post">
+						<div class="col-1">
+							<h2>报文分类</h2>
+							<div>
+								<input type="radio" name="mwfVo.messageNo" checked="checked"
+									value="6">6号 <input type="radio" name="mwfVo.messageNo"
+									value="8">8号
+							</div>
+							<h2>预报时间</h2>
+							<select id="mmDateTime" name="mwfVo.forecastDateTime"
+								class="stSlt">
+							</select>
+							<h2>基站MMSI</h2>
+							<input type="text" name="mwfVo.source_id">
+							<div id="mmsi-m">
+								<h2>目的MMSI</h2>
+								<input type="text" name="mwfVo.destination_id">
+							</div>
+						</div>
+						<div class="col-2">
+							<h2>
+								经纬度 <span id="add" class="add info">添加</span>
+							</h2>
+							<div id="diyBox" class="diyBox">
+								<ul>
+									<li class="jw-line">
+										<div class="jw-col">
+											<input type="text" name="mwfVo.latitudeDList">°<input
+												type="text" name="mwfVo.latitudeMList">′<input
+												type="text" name="mwfVo.latitudeSList">″<span>N</span>
+										</div>
+										<div class="jw-col">
+											<input type="text" name="mwfVo.longitudeDList">°<input
+												type="text" name="mwfVo.longitudeMList">′<input
+												type="text" name="mwfVo.longitudeSList">″<span>E</span>
+										</div>
+										<div id="del" class="del">-</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--海洋环境预报-->
+				<div id="tabs-2">
+					<form action="sendMessage/sendMefAction.action" method="post">
+						<div class="col-1">
+							<h2>报文分类</h2>
+							<div>
+								<input type="radio" name="mefVo.messageNo" checked="checked"
+									value="6">6号 <input type="radio" name="mefVo.messageNo"
+									value="8">8号
+							</div>
+							<h2>预报时间</h2>
+							<select id="mefDateTime" name="mefVo.forecastDateTime"
+								class="stSlt">
+							</select>
+							<h2>基站MMSI</h2>
+							<input type="text" name="mefVo.source_id">
+							<div id="mmsi-m2">
+								<h2>目的MMSI</h2>
+								<input type="text" name="mefVo.destination_id">
+							</div>
+						</div>
+						<div class="col-2">
+							<h2>
+								经纬度 <span id="add2" class="add info">添加</span>
+							</h2>
+							<div id="diyBox2" class="diyBox">
+								<ul>
+									<li class="jw-line">
+										<div class="jw-col">
+											<input type="text" name="mefVo.latitudeDList">°<input
+												type="text" name="mefVo.latitudeMList">′<input
+												type="text" name="mefVo.latitudeSList">″<span>N</span>
+										</div>
+										<div class="jw-col">
+											<input type="text" name="mefVo.longitudeDList">°<input
+												type="text" name="mefVo.longitudeMList">′<input
+												type="text" name="mefVo.longitudeSList">″<span>E</span>
+										</div>
+										<div id="del2" class="del">-</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--海洋气象预警-->
+				<div id="tabs-3">
+					<form action="sendMessage/sendMwwAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="mwwVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="mwwVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="mwwVo.source_id">
+						<div id="mmsi-m3">
+							<h2>目的MMSI</h2>
+							<input type="text" name="mwwVo.destination_id">
+						</div>
+						<h2>预警类型</h2>
+						<select id="yj-type" name="mwwVo.warnType">
+							<option value="1">热带气旋</option>
+							<option value="2">大风预警</option>
+							<option value="3">大浪预警</option>
+							<option value="4">大雾预警</option>
+							<option value="5">风暴潮</option>
+							<option value="6">冰况预警</option>
+							<option value="7">寒潮预警</option>
+						</select>
+						<h2>预警时间</h2>
+						<input type="text" id="yjtime" name="mwwVo.warnDateTime" value="" />
+						<h2>预警时效</h2>
+						<input type="text" id="yjsx" name="mwwVo.timeRange" readonly
+							style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-yjsx"></div>
+						<!--热带气旋-->
+						<div id="yj-1" class="yjbox">
+							<h2>中心位置经纬度</h2>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.tropicalCycloneLatd">°<input
+									type="text" name="mwwVo.tropicalCycloneLatm">′<input
+									type="text" name="mwwVo.tropicalCycloneLats">″<span>N</span>
+							</div>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.tropicalCycloneLond">°<input
+									type="text" name="mwwVo.tropicalCycloneLonm">′<input
+									type="text" name="mwwVo.tropicalCycloneLons">″<span>E</span>
+							</div>
+							<div class="clear info">经度取值范围：经度105°-130°,纬度取值范围：纬度8°-42°</div>
+							<h2>气旋类型</h2>
+							<select id="qx-type" name="mwwVo.tropicalCycloneType">
+								<option value="1">热带低压</option>
+								<option value="2">热带风暴</option>
+								<option value="3">强热带风暴</option>
+								<option value="4">台风</option>
+							</select>
+							<h2>气旋半径</h2>
+							<input type="text" id="qxbj" name="mwwVo.tropicalCycloneRad"
+								readonly style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-qxbj"></div>
+							<h2>移动速度</h2>
+							<input type="text" id="ydsd" name="mwwVo.tropicalCycloneSpeed"
+								readonly style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-ydsd"></div>
+							<h2>移动方向</h2>
+							<input type="text" id="ydfx"
+								name="mwwVo.tropicalCycloneDirection" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-ydfx"></div>
+							<h2>中心风力</h2>
+							<input type="text" id="zxfl"
+								name="mwwVo.tropicalCycloneWindPower" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-zxfl"></div>
+						</div>
+						<!--大风预警-->
+						<div id="yj-2" class="yjbox">
+							<h2>中心位置经纬度</h2>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.windWarnLatd">°<input
+									type="text" name="mwwVo.windWarnLatm">′<input
+									type="text" name="mwwVo.windWarnLats">″<span>N</span>
+							</div>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.windWarnLond">°<input
+									type="text" name="mwwVo.windWarnLonm">′<input
+									type="text" name="mwwVo.windWarnLons">″<span>E</span>
+							</div>
+							<div class="clear info">经度取值范围：经度105°-130°,纬度取值范围：纬度8°-42°</div>
+							<h2>半径</h2>
+							<input type="text" id="fbj" name="mwwVo.windWarnRad" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-fbj"></div>
+							<h2>最低风力</h2>
+							<input type="text" id="zdfl" name="mwwVo.windWarnMinWindPower"
+								readonly style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-zdfl"></div>
+							<h2>最高风力</h2>
+							<input type="text" id="zgfl" name="mwwVo.windWarnMaxWindPower"
+								readonly style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-zgfl"></div>
+							<h2>风向</h2>
+							<select id="fx" class="stSlt" name="mwwVo.windWarnDirection">
+								<option value="1">东风</option>
+								<option value="2">东南风</option>
+								<option value="3">南风</option>
+								<option value="4">西南风</option>
+								<option value="5">西风</option>
+								<option value="6">西北风</option>
+								<option value="7">北风</option>
+								<option value="8">东北风</option>
+							</select>
+						</div>
+						<!--大浪预警-->
+						<div id="yj-3" class="yjbox">
+							<h2>中心位置经纬度</h2>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.waveWarnLatd">°<input
+									type="text" name="mwwVo.waveWarnLatm">′<input
+									type="text" name="mwwVo.waveWarnLats">″<span>N</span>
+							</div>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.waveWarnLond">°<input
+									type="text" name="mwwVo.waveWarnLonm">′<input
+									type="text" name="mwwVo.waveWarnLons">″<span>E</span>
+							</div>
+							<div class="clear info">经度取值范围：经度105°-130°,纬度取值范围：纬度8°-42°</div>
+							<h2>半径</h2>
+							<input type="text" id="lbj" name="mwwVo.waveWarnRad" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-lbj"></div>
+							<h2>波高</h2>
+							<input type="text" id="bgao" name="mwwVo.waveWarnHs" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-bgao"></div>
+							<h2>波周期</h2>
+							<input type="text" id="bzq" name="mwwVo.waveWarnPeriod" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-bzq"></div>
+						</div>
+						<!--大雾预警-->
+						<div id="yj-4" class="yjbox">
+							<h2>中心位置经纬度</h2>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.fogWarnLatd">°<input
+									type="text" name="mwwVo.fogWarnLatm">′<input
+									type="text" name="mwwVo.fogWarnLats">″<span>N</span>
+							</div>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.fogWarnLond">°<input
+									type="text" name="mwwVo.fogWarnLonm">′<input
+									type="text" name="mwwVo.fogWarnLons">″<span>E</span>
+							</div>
+							<div class="clear info">经度取值范围：经度105°-130°,纬度取值范围：纬度8°-42°</div>
+							<h2>半径</h2>
+							<input type="text" id="wbj" name="mwwVo.fogWarnRad" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-wbj"></div>
+							<h2>能见度</h2>
+							<input type="text" id="njd" name="mwwVo.fogWarnVisibility"
+								readonly style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-njd"></div>
+						</div>
+						<!--风暴潮-->
+						<div id="yj-5" class="yjbox">
+							<h2>中心位置经纬度</h2>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.stormSurgeWarnLatd">°<input
+									type="text" name="mwwVo.stormSurgeWarnLatm">′<input
+									type="text" name="mwwVo.stormSurgeWarnLats">″<span>N</span>
+							</div>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.stormSurgeWarnLond">°<input
+									type="text" name="mwwVo.stormSurgeWarnLonm">′<input
+									type="text" name="mwwVo.stormSurgeWarnLons">″<span>E</span>
+							</div>
+							<div class="clear info">经度取值范围：经度105°-130°,纬度取值范围：纬度8°-42°</div>
+							<h2>半径</h2>
+							<input type="text" id="fbcbj" name="mwwVo.stormSurgeWarnRad"
+								readonly style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-fbcbj"></div>
+							<h2>增水</h2>
+							<input type="text" id="zs"
+								name="mwwVo.stormSurgeWarnIncreasWater" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-zs"></div>
+							<h2>潮位</h2>
+							<input type="text" id="cw" name="mwwVo.stormSurgeWarnTide"
+								readonly style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-cw"></div>
+							<h2>波周期</h2>
+							<input type="text" id="fbcbzq"
+								name="mwwVo.stormSurgeWarnWavePeriod" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-fbcbzq"></div>
+						</div>
+						<!--冰况预警-->
+						<div id="yj-6" class="yjbox">
+							<h2>中心位置经纬度</h2>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.seaIceWarnLatd">°<input
+									type="text" name="mwwVo.seaIceWarnLatm">′<input
+									type="text" name="mwwVo.seaIceWarnLats">″<span>N</span>
+							</div>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.seaIceWarnLond">°<input
+									type="text" name="mwwVo.seaIceWarnLonm">′<input
+									type="text" name="mwwVo.seaIceWarnLons">″<span>E</span>
+							</div>
+							<div class="clear info">经度取值范围：经度105°-130°,纬度取值范围：纬度8°-42°</div>
+							<h2>半径</h2>
+							<input type="text" id="hbbj" name="mwwVo.seaIceWarnRad" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-hbbj"></div>
+							<h2>厚度</h2>
+							<input type="text" id="hbhd" name="mwwVo.seaIceWarnThickness"
+								readonly style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-hbhd"></div>
+						</div>
+						<!--寒潮预警-->
+						<div id="yj-7" class="yjbox">
+							<h2>中心位置经纬度</h2>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.coldWarnLatd">°<input
+									type="text" name="mwwVo.coldWarnLatm">′<input
+									type="text" name="mwwVo.coldWarnLats">″<span>N</span>
+							</div>
+							<div class="jw-col">
+								<input type="text" name="mwwVo.coldWarnLond">°<input
+									type="text" name="mwwVo.coldWarnLonm">′<input
+									type="text" name="mwwVo.coldWarnLons">″<span>E</span>
+							</div>
+							<div class="clear info">经度取值范围：经度105°-130°,纬度取值范围：纬度8°-42°</div>
+							<h2>半径</h2>
+							<input type="text" id="hcbj" name="mwwVo.coldWarnRad" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-hcbj"></div>
+							<h2>寒潮级别</h2>
+							<select id="hcjb" class="stSlt" name="mwwVo.coldWarnLevel">
+								<option value="1">蓝色</option>
+								<option value="2">黄色</option>
+								<option value="3">橙色</option>
+								<option value="4">红色</option>
+							</select>
+						</div>
+						<input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--水文气象预报-->
+				<div id="tabs-4">
+					<form action="sendMessage/sendHwfAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="hwfVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="hwfVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="hwfVo.source_id">
+						<div id="mmsi-m4">
+							<h2>目的MMSI</h2>
+							<input type="text" name="hwfVo.destination_id">
+						</div>
+						<h2>预报时间</h2>
+						<input type="text" id="ybtime" name="hwfVo.forecastDateTime"
+							value="" />
+						<h2 id="add-sw">添加</h2>
+						<dl>
+							<dt class="swtab">
+								<div class="col">经度</div>
+								<div class="col">纬度</div>
+								<div class="col">高潮时间</div>
+								<div class="col">低潮时间</div>
+								<div class="col">水位</div>
+								<div></div>
+							</dt>
+							<dd class="swtab" id="swcol">
+								<div class="col">
+									<div class="jw-col">
+										<input type="text" name="hwfVo.longitudeDList">°<input
+											type="text" name="hwfVo.longitudeMList">′<input
+											type="text" name="hwfVo.longitudeSList">″<span>E</span>
+									</div>
+								</div>
+								<div class="col">
+									<div class="jw-col">
+										<input type="text" name="hwfVo.latitudeDList">°<input
+											type="text" name="hwfVo.latitudeMList">′<input
+											type="text" name="hwfVo.latitudeSList">″<span>N</span>
+									</div>
+								</div>
+								<div class="col">
+									<input type="text" id="gctime" class="gctime"
+										name="hwfVo.highTideTime" value="" />
+								</div>
+								<div class="col">
+									<input type="text" id="dctime" class="dctime"
+										name="hwfVo.lowTideTime" value="" />
+								</div>
+								<div class="col">
+									<input type="text" name="hwfVo.tide" class="sw">
+								</div>
+								<div class="col">
+									<span id="del-sw" class="del">-</span>
+								</div>
+							</dd>
+						</dl>
+						<input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--助航标注动态-->
+				<div id="tabs-5">
+					<form action="sendMessage/sendAmdAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="amdVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="amdVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="amdVo.source_id">
+						<div id="mmsi-m5">
+							<h2>目的MMSI</h2>
+							<input type="text" name="amdVo.destination_id">
+						</div>
+						<h2>发布时效</h2>
+						<input type="text" id="zhb-time" name="amdVo.publishRange"
+							readonly style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-zhb-time"></div>
+						<h2>状态</h2>
+						<select id="zhb-state" name="amdVo.type">
+							<option value="1">新增</option>
+							<option value="2">撤除</option>
+							<option value="3">飘失</option>
+							<option value="4">故障</option>
+							<option value="5">恢复工作</option>
+							<option value="6">移位</option>
+							<option value="7">灯质改变</option>
+							<option value="8">DGPS台站停止发射</option>
+						</select>
+
+						<div id="zhb-1" class="zhbbox">
+							<h2>经纬度</h2>
+							<ul>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="amdVo.otherLatitudeD">°<input
+											type="text" name="amdVo.otherLatitudeM">′<input
+											type="text" name="amdVo.otherLatitudeS">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="amdVo.otherLongitudeD">°<input
+											type="text" name="amdVo.otherLongitudeM">′<input
+											type="text" name="amdVo.otherLongitudeS">″<span>E</span>
+									</div>
+								</li>
+							</ul>
+							<div class="clear"></div>
+							<h2>航标类型</h2>
+							<select name="amdVo.otherType" class="stSlt">
+								<option value="1">灯塔</option>
+								<option value="2">灯桩</option>
+								<option value="3">导标</option>
+								<option value="4">立标</option>
+								<option value="5">灯船</option>
+								<option value="6">灯浮标</option>
+								<option value="7">浮标</option>
+								<option value="8">系船标</option>
+								<option value="9">活节式灯桩</option>
+								<option value="10">桥梁标志</option>
+								<option value="11">大型助航浮标</option>
+								<option value="12">应急沉船标</option>
+								<option value="13">海面建筑物</option>
+								<option value="14">测速标</option>
+								<option value="15">管线标</option>
+								<option value="16">大型显示标牌</option>
+								<option value="17">罗经标</option>
+								<option value="18">雾钟</option>
+								<option value="19">气雾号</option>
+								<option value="20">电雾号</option>
+								<option value="21">RBN-DGPS台站</option>
+								<option value="22">监测站</option>
+								<option value="23">雷达应答器</option>
+								<option value="24">AIS基站</option>
+								<option value="25">AIS中继器</option>
+								<option value="26">AIS航标</option>
+								<option value="27">应急示位标</option>
+								<option value="28">桥航标</option>
+								<option value="29">其他</option>
+							</select>
+						</div>
+						<div id="zhb-6" class="zhbbox">
+							<h2>经纬度</h2>
+							<ul>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="amdVo.shiftStartLongitudeD">°<input
+											type="text" name="amdVo.shiftStartLongitudeM">′<input
+											type="text" name="amdVo.shiftStartLongitudeS">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="amdVo.shiftStartLatitudeD">°<input
+											type="text" name="amdVo.shiftStartLatitudeM">′<input
+											type="text" name="amdVo.shiftStartLatitudeS">″<span>E</span>
+									</div>
+								</li>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="amdVo.shiftEndLatitudeD">°<input
+											type="text" name="amdVo.shiftEndLatitudeM">′<input
+											type="text" name="amdVo.shiftEndLatitudeS">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="amdVo.shiftEndLongitudeD">°<input
+											type="text" name="amdVo.shiftEndLongitudeM">′<input
+											type="text" name="amdVo.shiftEndLongitudeS">″<span>E</span>
+									</div>
+								</li>
+							</ul>
+							<div class="clear"></div>
+							<h2>航标类型</h2>
+							<select name="amdVo.shiftType" class="stSlt">
+								<option value="1">灯塔</option>
+								<option value="2">灯桩</option>
+								<option value="3">导标</option>
+								<option value="4">立标</option>
+								<option value="5">灯船</option>
+								<option value="6">灯浮标</option>
+								<option value="7">浮标</option>
+								<option value="8">系船标</option>
+								<option value="9">活节式灯桩</option>
+								<option value="10">桥梁标志</option>
+								<option value="11">大型助航浮标</option>
+								<option value="12">应急沉船标</option>
+								<option value="13">海面建筑物</option>
+								<option value="14">测速标</option>
+								<option value="15">管线标</option>
+								<option value="16">大型显示标牌</option>
+								<option value="17">罗经标</option>
+								<option value="18">雾钟</option>
+								<option value="19">气雾号</option>
+								<option value="20">电雾号</option>
+								<option value="21">RBN-DGPS台站</option>
+								<option value="22">监测站</option>
+								<option value="23">雷达应答器</option>
+								<option value="24">AIS基站</option>
+								<option value="25">AIS中继器</option>
+								<option value="26">AIS航标</option>
+								<option value="27">应急示位标</option>
+								<option value="28">桥航标</option>
+								<option value="29">其他</option>
+							</select>
+						</div>
+						<div id="zhb-7" class="zhbbox">
+							<h2>经纬度</h2>
+							<ul>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="amdVo.lightLatitudeD">°<input
+											type="text" name="amdVo.lightLatitudeM">′<input
+											type="text" name="amdVo.lightLatitudeS">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="amdVo.lightLongitudeD">°<input
+											type="text" name="amdVo.lightLongitudeM">′<input
+											type="text" name="amdVo.lightLongitudeS">″<span>E</span>
+									</div>
+								</li>
+							</ul>
+							<div class="clear"></div>
+							<h2>航标类型</h2>
+							<select name="amdVo.lightType" class="stSlt">
+								<option value="1">灯塔</option>
+								<option value="2">灯桩</option>
+								<option value="3">导标</option>
+								<option value="4">立标</option>
+								<option value="5">灯船</option>
+								<option value="6">灯浮标</option>
+								<option value="7">浮标</option>
+								<option value="8">系船标</option>
+								<option value="9">活节式灯桩</option>
+								<option value="10">桥梁标志</option>
+								<option value="11">大型助航浮标</option>
+								<option value="12">应急沉船标</option>
+								<option value="13">海面建筑物</option>
+								<option value="14">测速标</option>
+								<option value="15">管线标</option>
+								<option value="16">大型显示标牌</option>
+								<option value="17">罗经标</option>
+								<option value="18">雾钟</option>
+								<option value="19">气雾号</option>
+								<option value="20">电雾号</option>
+								<option value="21">RBN-DGPS台站</option>
+								<option value="22">监测站</option>
+								<option value="23">雷达应答器</option>
+								<option value="24">AIS基站</option>
+								<option value="25">AIS中继器</option>
+								<option value="26">AIS航标</option>
+								<option value="27">应急示位标</option>
+								<option value="28">桥航标</option>
+								<option value="29">其他</option>
+							</select>
+							<h2>节奏名称</h2>
+							<select name="amdVo.rhythmName" class="stSlt">
+								<option value="1">定光</option>
+								<option value="2">顿光</option>
+								<option value="3">单顿光</option>
+								<option value="4">联顿光</option>
+								<option value="5">混合联顿光</option>
+								<option value="6">等明暗光</option>
+								<option value="7">闪光</option>
+								<option value="8">单闪光</option>
+								<option value="9">长闪光</option>
+								<option value="10">联闪光</option>
+								<option value="11">混合联闪光</option>
+								<option value="12">快闪光</option>
+								<option value="13">连续快闪光</option>
+								<option value="14">联快闪光</option>
+								<option value="15">甚快闪光</option>
+								<option value="16">连续甚快闪光</option>
+								<option value="17">联基快闪光</option>
+								<option value="18">超快闪光</option>
+								<option value="19">连续超快闪光</option>
+								<option value="20">莫尔斯灯光</option>
+								<option value="21">定闪光</option>
+								<option value="22">互光</option>
+								<option value="23">快闪加长闪</option>
+								<option value="24">甚快闪加长闪</option>
+								<option value="25">超快闪加长闪</option>
+								<option value="26">定光加互闪光</option>
+								<option value="27">其它</option>
+							</select>
+							<h2>节奏参数</h2>
+							<select name="amdVo.rhythmParameters" class="stSlt">
+								<option value="1">()</option>
+								<option value="2">(2)</option>
+								<option value="3">(3)</option>
+								<option value="4">(4)</option>
+								<option value="5">(6)</option>
+								<option value="6">(9)</option>
+								<option value="7">(2+2)</option>
+								<option value="8">(2+1)</option>
+								<option value="9">(3+1)</option>
+								<option value="10">(6)(1)</option>
+								<option value="11">(1)(2+3)</option>
+								<option value="12">(2)(3)</option>
+								<option value="13">(A)</option>
+								<option value="14">(Q)</option>
+								<option value="15">(P)</option>
+								<option value="16">(O)</option>
+								<option value="17">(K)</option>
+								<option value="18">©</option>
+								<option value="19">(U)</option>
+								<option value="20">(Y)</option>
+								<option value="21">(F)</option>
+								<option value="22">其他</option>
+							</select>
+							<h2>灯质颜色</h2>
+							<select name="amdVo.lightColor" class="stSlt">
+								<option value="1">红</option>
+								<option value="2">绿</option>
+								<option value="3">黄</option>
+								<option value="4">白</option>
+								<option value="5">蓝</option>
+								<option value="6">黄/蓝</option>
+								<option value="7">白/红</option>
+								<option value="8">黑/黄</option>
+								<option value="9">黑/黄/黑</option>
+								<option value="10">黄/黑</option>
+								<option value="11">黄/黑/黄</option>
+								<option value="12">绿/红/绿</option>
+								<option value="13">红/绿/红</option>
+								<option value="14">黑/红/黑</option>
+								<option value="15">黄/红/黄</option>
+								<option value="16">绿/红</option>
+								<option value="17">红/绿</option>
+								<option value="18">蓝/白</option>
+								<option value="19">其它</option>
+							</select>
+							<h2>灯质周期</h2>
+							<select name="amdVo.lightCycle" class="stSlt">
+								<option value="1">1秒</option>
+								<option value="2">1.5秒</option>
+								<option value="3">2秒</option>
+								<option value="4">3秒</option>
+								<option value="5">4秒</option>
+								<option value="6">5秒</option>
+								<option value="7">6秒</option>
+								<option value="8">8秒</option>
+								<option value="9">9秒</option>
+								<option value="10">10秒</option>
+								<option value="11">12秒</option>
+								<option value="12">15秒</option>
+								<option value="13">其他</option>
+							</select>
+						</div>
+						<div id="zhb-8" class="zhbbox">
+							<h2>发射频率</h2>
+							<input type="text" id="zhb-fspl" name="amdVo.dgpsLaunch" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-zhb-fspl"></div>
+
+							<h2>经纬度</h2>
+							<ul>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="amdVo.dgpsLatitudeD">°<input
+											type="text" name="amdVo.dgpsLatitudeM">′<input
+											type="text" name="amdVo.dgpsLatitudeS">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="amdVo.dgpsLongitudeD">°<input
+											type="text" name="amdVo.dgpsLongitudeM">′<input
+											type="text" name="amdVo.dgpsLongitudeS">″<span>E</span>
+									</div>
+								</li>
+							</ul>
+							<div class="clear"></div>
+						</div>
+						<input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--碍航物信息-->
+				<div id="tabs-6">
+					<form action="sendMessage/sendNavAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="navVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="navVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="navVo.source_id">
+						<div id="mmsi-m6">
+							<h2>目的MMSI</h2>
+							<input type="text" name="navVo.destination_id">
+						</div>
+						<h2>类型</h2>
+						<select name="navVo.type" class="stSlt">
+							<option value="1">沉船</option>
+							<option value="2">礁石</option>
+							<option value="3">浅滩</option>
+							<option value="4">不明物</option>
+							<option value="5">残骸</option>
+							<option value="6">水下建筑</option>
+							<option value="7">大型浮筒</option>
+							<option value="8">漂移船</option>
+							<option value="9">废油</option>
+							<option value="10">废弃救生艇</option>
+							<option value="11">漂流危险物</option>
+							<option value="12">废物</option>
+							<option value="13">浮冰</option>
+						</select>
+						<h2>经纬度</h2>
+						<ul>
+							<li class="jw-line">
+								<div class="jw-col">
+									<input type="text" name="navVo.LatitudeD">°<input
+										type="text" name="navVo.LatitudeM">′<input type="text"
+										name="navVo.LatitudeS">″<span>N</span>
+								</div>
+								<div class="jw-col">
+									<input type="text" name="navVo.longitudeD">°<input
+										type="text" name="navVo.longitudeM">′<input
+										type="text" name="navVo.longitudeS">″<span>E</span>
+								</div>
+							</li>
+						</ul>
+						<div class="clear"></div>
+						<h2>半径</h2>
+						<input type="text" id="ahw-bj" name="navVo.radius" readonly
+							style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-ahw-bj"></div>
+						<h2>时间 1</h2>
+						<input type="text" id="ahw-time1" name="navVo.time1" value="" />
+						<h2>时间 2</h2>
+						<input type="text" id="ahw-time2" name="navVo.time2" value="" />
+						<h2>补充</h2>
+						<select name="navVo.farther" class="stSlt">
+							<option value="1">注意</option>
+							<option value="2">避让</option>
+							<option value="3">绕行</option>
+						</select> <input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--施工作业-->
+				<div id="tabs-7">
+					<form action="sendMessage/sendCwAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="cwVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="cwVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="cwVo.source_id">
+						<div id="mmsi-m7">
+							<h2>目的MMSI</h2>
+							<input type="text" name="cwVo.destination_id">
+						</div>
+						<h2>类型</h2>
+						<select name="cwVo.type" class="stSlt">
+							<option value="1">救捞作业</option>
+							<option value="2">打捞作业</option>
+							<option value="3">水下施工</option>
+							<option value="4">水下作业</option>
+							<option value="5">维修作业</option>
+							<option value="6">爆破作业</option>
+						</select>
+						<h2>施工船判断位</h2>
+						<select name="cwVo.shipType" class="stSlt">
+							<option value="1">一艘船</option>
+							<option value="2">多艘船</option>
+							<option value="3">一艘船（未安装AIS）</option>
+							<option value="4">多艘船（未安装AIS）</option>
+						</select>
+						<h2>施工船MMSI</h2>
+						<input type="text" name="cwVo.shipMMSI">
+						<h2>经纬度</h2>
+						<ul>
+							<li class="jw-line">
+								<div class="jw-col">
+									<input type="text" name="cwVo.startLatitudeD">°<input
+										type="text" name="cwVo.startLatitudeM">′<input
+										type="text" name="cwVo.startLatitudeS">″<span>N</span>
+								</div>
+								<div class="jw-col">
+									<input type="text" name="cwVo.startLongitudeD">°<input
+										type="text" name="cwVo.startLongitudeM">′<input
+										type="text" name="cwVo.startLongitudeS">″<span>E</span>
+								</div>
+							</li>
+							<li class="jw-line">
+								<div class="jw-col">
+									<input type="text" name="cwVo.endLatitudeD">°<input
+										type="text" name="cwVo.endLatitudeM">′<input
+										type="text" name="cwVo.endLatitudeS">″<span>N</span>
+								</div>
+								<div class="jw-col">
+									<input type="text" name="cwVo.endLongitudeD">°<input
+										type="text" name="cwVo.endLongitudeM">′<input
+										type="text" name="cwVo.endLongitudeS">″<span>E</span>
+								</div>
+							</li>
+						</ul>
+						<h2>半径</h2>
+						<input type="text" id="sgzy-bj" name="cwVo.radius" readonly
+							style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-sgzy-bj"></div>
+						<h2>时间 1</h2>
+						<input type="text" id="sgzy-time1" name="cwVo.startDateTime"
+							value="" />
+						<h2>时间 2</h2>
+						<input type="text" id="sgzy-time2" name="cwVo.endDateTime"
+							value="" /> <input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--笨重拖带-->
+				<div id="tabs-8">
+					<form action="sendMessage/sendHtAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="htVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="htVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="htVo.source_id">
+						<div id="mmsi-m8">
+							<h2>目的MMSI</h2>
+							<input type="text" name="htVo.destination_id">
+						</div>
+						<h2>被拖带船舶MMSI</h2>
+						<input type="text" name="htVo.mmsi">
+						<h2>经纬度</h2>
+						<ul>
+							<li class="jw-line">
+								<div class="jw-col">
+									<input type="text" name="htVo.startLatitudeD">°<input
+										type="text" name="htVo.startLatitudeM">′<input
+										type="text" name="htVo.startLatitudeS">″<span>N</span>
+								</div>
+								<div class="jw-col">
+									<input type="text" name="htVo.startLongitudeD">°<input
+										type="text" name="htVo.startLongitudeM">′<input
+										type="text" name="htVo.startLongitudeS">″<span>E</span>
+								</div>
+							</li>
+							<li class="jw-line">
+								<div class="jw-col">
+									<input type="text" name="htVo.endLatitudeD">°<input
+										type="text" name="htVo.endLatitudeM">′<input
+										type="text" name="htVo.endLatitudeS">″<span>N</span>
+								</div>
+								<div class="jw-col">
+									<input type="text" name="htVo.endLongitudeD">°<input
+										type="text" name="htVo.endLongitudeM">′<input
+										type="text" name="htVo.endLongitudeS">″<span>E</span>
+								</div>
+							</li>
+						</ul>
+						<h2>总长</h2>
+						<input type="text" id="bztd-zc" name="htVo.overallLength" readonly
+							style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-bztd-zc"></div>
+						<h2>航速</h2>
+						<input type="text" id="bztd-hs" name="htVo.speed" readonly
+							style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-bztd-hs"></div>
+						<h2>时间 1</h2>
+						<input type="text" id="bztd-time1" name="htVo.startDateTime"
+							value="" />
+						<h2>时间 2</h2>
+						<input type="text" id="bztd-time2" name="htVo.endDateTime"
+							value="" />
+						<h2>注意事项</h2>
+						<select name="htVo.precautions" class="stSlt">
+							<option value="1">请宽让</option>
+							<option value="2">希宽让</option>
+							<option value="3">请各航船注意</option>
+						</select> <input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--演习、打靶、海上军事活动-->
+				<div id="tabs-9">
+					<form action="sendMessage/sendMaAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="maVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="maVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="maVo.source_id">
+						<div id="mmsi-m9">
+							<h2>目的MMSI</h2>
+							<input type="text" name="maVo.destination_id">
+						</div>
+						<h2>活动主题</h2>
+						<select name="maVo.activitiyTheme" class="stSlt">
+							<option value="1">军事演习</option>
+							<option value="2">消防演习</option>
+							<option value="3">搜救演习</option>
+							<option value="4">轰炸投弹</option>
+							<option value="5">射击</option>
+							<option value="6">实弹射击</option>
+							<option value="7">导弹打靶</option>
+							<option value="8">火箭发射</option>
+							<option value="9">其它</option>
+						</select>
+						<h2>持续时间类型</h2>
+						<select name="maVo.durationType" class="stSlt">
+							<option value="0">连续</option>
+							<option value="1">某一时段</option>
+						</select>
+						<h2>
+							经纬度 <span id="add-hd" class="add info">添加</span>
+						</h2>
+						<div id="hdbox" class="diyBox">
+							<ul>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="maVo.latitudeDList">°<input
+											type="text" name="maVo.latitudeMList">′<input
+											type="text" name="maVo.latitudeSList">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="maVo.longitudeDList">°<input
+											type="text" name="maVo.longitudeMList">′<input
+											type="text" name="maVo.longitudeSList">″<span>E</span>
+									</div>
+									<div id="del-hd" class="del">-</div>
+								</li>
+							</ul>
+						</div>
+						<h2>时间 1</h2>
+						<input type="text" id="hd-time1" name="maVo.startDateTime"
+							value="" />
+						<h2>时间 2</h2>
+						<input type="text" id="hd-time2" name="maVo.endDateTime" value="" />
+						<h2>注意事项</h2>
+						<select name="maVo.precautions" class="stSlt">
+							<option value="1">希各航船注意</option>
+							<option value="2">禁止驶入</option>
+							<option value="3">航道封航</option>
+							<option value="4">在到达…之前请用VHF …频道与…联系</option>
+						</select> <input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--船舶遇险-->
+				<div id="tabs-10">
+					<form action="sendMessage/sendSdAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="sdVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="sdVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="sdVo.source_id">
+						<div id="mmsi-m10">
+							<h2>目的MMSI</h2>
+							<input type="text" name="sdVo.destination_id">
+						</div>
+						<h2>遇险类型</h2>
+						<select name="sdVo.distressType" class="stSlt">
+							<option value="1">遇险</option>
+							<option value="2">搁浅</option>
+							<option value="3">礁</option>
+							<option value="4">失控</option>
+							<option value="5">发生核事故</option>
+							<option value="6">触碰水雷</option>
+							<option value="7">失火</option>
+							<option value="8">未按时报告船位</option>
+							<option value="9">其它</option>
+						</select>
+						<h2>状况描述</h2>
+						<select name="sdVo.statusDescribed" class="stSlt">
+							<option value="1">沉没</option>
+							<option value="2">倾覆</option>
+							<option value="3">弃船</option>
+							<option value="4">有人落水</option>
+							<option value="5">有人失踪</option>
+							<option value="6">不能控制火势</option>
+							<option value="7">进水</option>
+							<option value="8">发生爆炸</option>
+							<option value="9">倾斜</option>
+							<option value="10">漂移</option>
+							<option value="11">其它</option>
+						</select>
+						<h2>判断位</h2>
+						<select name="sdVo.shipType" class="stSlt">
+							<option value="1">单一船舶</option>
+							<option value="2">单一不明船舶</option>
+							<option value="3">非单一船舶</option>
+							<option value="4">非单一不明船舶</option>
+						</select>
+						<h2>补充</h2>
+						<select name="sdVo.farther" class="stSlt">
+							<option value="1">请求援助</option>
+							<option value="2">需要进行救助</option>
+							<option value="3">请报告见到的状况</option>
+							<option value="4">附近船舶需要密切注意</option>
+							<option value="5">请在半径XX海里的船舶向搜救中心协调报告</option>
+							<option value="6">其它</option>
+						</select>
+						<h2>经纬度</h2>
+						<ul>
+							<li class="jw-line">
+								<div class="jw-col">
+									<input type="text" name="sdVo.LatitudeD">°<input
+										type="text" name="sdVo.LatitudeM">′<input type="text"
+										name="sdVo.LatitudeS">″<span>N</span>
+								</div>
+								<div class="jw-col">
+									<input type="text" name="sdVo.longitudeD">°<input
+										type="text" name="sdVo.longitudeM">′<input type="text"
+										name="sdVo.longitudeS">″<span>E</span>
+								</div>
+							</li>
+						</ul>
+						<h2>时间</h2>
+						<input type="text" id="cbyx-time" name="sdVo.dateTime"
+							class="alltime" value="" />
+						<h2>发布时效</h2>
+						<input type="text" id="cbyx-fbsx" name="sdVo.releaseTime" readonly
+							style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-cbyx-fbsx"></div>
+						<input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--划定区域（圆形、矩形）-->
+				<div id="tabs-11">
+					<form action="sendMessage/sendDaAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="daVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="daVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="daVo.source_id">
+						<div id="mmsi-m11">
+							<h2>目的MMSI</h2>
+							<input type="text" name="daVo.destination_id">
+						</div>
+						<h2>区域类型</h2>
+						<select name="daVo.areaType" class="stSlt">
+							<option value="1">禁航区</option>
+							<option value="2">禁止抛锚区</option>
+							<option value="3">管道区</option>
+							<option value="4">海底电缆区</option>
+							<option value="5">危险水雷区</option>
+							<option value="6">军事训练区</option>
+							<option value="7">潜艇演习区</option>
+							<option value="8">检疫锚地</option>
+							<option value="9">油轮锚地</option>
+							<option value="10">倾废区</option>
+							<option value="11">抛泥区</option>
+							<option value="12">养殖区</option>
+							<option value="13">水上娱乐区</option>
+							<option value="14">其它区</option>
+						</select>
+						<h2>区域特性</h2>
+						<select id="hdqy-1-tx" name="daVo.areaFeature" class="stSlt">
+							<option value="1">圆形区域</option>
+							<option value="2">矩形区域</option>
+						</select>
+						<div id="hdqytx-1" class="hdqytxbox">
+							<h2>经纬度</h2>
+							<ul>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="daVo.roundLatitudeD">°<input
+											type="text" name="daVo.roundLatitudeM">′<input
+											type="text" name="daVo.roundLatitudeS">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="daVo.roundLongitudeD">°<input
+											type="text" name="daVo.roundLongitudeM">′<input
+											type="text" name="daVo.roundLongitudeS">″<span>E</span>
+									</div>
+								</li>
+							</ul>
+							<h2>半径</h2>
+							<input type="text" id="hdqytx-bj" name="daVo.radius" readonly
+								style="border: 0; color: #f6931f; font-weight: bold;">
+							<div id="slider-hdqytx-bj"></div>
+						</div>
+						<div id="hdqytx-2" class="hdqytxbox">
+							<h2>经纬度</h2>
+							<ul>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="daVo.rectangleStartLatitudeD">°<input
+											type="text" name="daVo.rectangleStartLatitudeM">′<input
+											type="text" name="daVo.rectangleStartLatitudeS">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="daVo.rectangleStartLongitudeD">°<input
+											type="text" name="daVo.rectangleStartLongitudeM">′<input
+											type="text" name="daVo.rectangleStartLongitudeS">″<span>E</span>
+									</div>
+								</li>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="daVo.rectangleEndLatitudeD">°<input
+											type="text" name="daVo.rectangleEndLatitudeM">′<input
+											type="text" name="daVo.rectangleEndLatitudeS">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="daVo.rectangleEndLongitudeD">°<input
+											type="text" name="daVo.rectangleEndLongitudeM">′<input
+											type="text" name="daVo.rectangleEndLongitudeS">″<span>E</span>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<h2>时间 1</h2>
+						<input type="text" id="hdqytx-time1" name="daVo.startDateTime"
+							class="alltime" value="" />
+						<h2>时间 2</h2>
+						<input type="text" id="hdqytx-time2" name="daVo.endDateTime"
+							class="alltime" value="" />
+						<h2>补充</h2>
+						<select name="daVo.farther" class="stSlt">
+							<option value="1">希各船注意</option>
+							<option value="2">禁止驶入</option>
+							<option value="3">禁止抛锚</option>
+							<option value="4">禁止渔捞</option>
+							<option value="5">禁止航行</option>
+							<option value="6">其它</option>
+						</select> <input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--划定区域（不规则）-->
+				<div id="tabs-12">
+					<form action="sendMessage/sendDiaAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="diaVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="diaVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="diaVo.source_id">
+						<div id="mmsi-m12">
+							<h2>目的MMSI</h2>
+							<input type="text" name="diaVo.destination_id">
+						</div>
+						<h2>区域类型</h2>
+						<select name="diaVo.areaType" class="stSlt">
+							<option value="1">禁航区</option>
+							<option value="2">禁止抛锚区</option>
+							<option value="3">管道区</option>
+							<option value="4">海底电缆区</option>
+							<option value="5">危险水雷区</option>
+							<option value="6">军事训练区</option>
+							<option value="7">潜艇演习区</option>
+							<option value="8">检疫锚地</option>
+							<option value="9">油轮锚地</option>
+							<option value="10">倾废区</option>
+							<option value="11">抛泥区</option>
+							<option value="12">养殖区</option>
+							<option value="13">水上娱乐区</option>
+							<option value="14">其它区</option>
+						</select>
+						<h2>
+							经纬度 <span id="add-hdqy" class="add info">添加</span>
+						</h2>
+						<div id="hdqybox" class="diyBox">
+							<ul>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="diaVo.latitudeDList">°<input
+											type="text" name="diaVo.latitudeMList">′<input
+											type="text" name="diaVo.latitudeSList">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="diaVo.longitudeDList">°<input
+											type="text" name="diaVo.longitudeMList">′<input
+											type="text" name="diaVo.longitudeSList">″<span>E</span>
+									</div>
+									<div id="del-hdqy" class="del">-</div>
+								</li>
+							</ul>
+						</div>
+						<h2>时间 1</h2>
+						<input type="text" id="hdqytx-b-time1" name="diaVo.startDateTime"
+							class="alltime" value="" />
+						<h2>时间 2</h2>
+						<input type="text" id="hdqytx-b-time2" name="diaVo.endDateTime"
+							class="alltime" value="" /> </select> <input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--气象采集-->
+				<!-- <div id="tabs-13"></div> -->
+				<!--航线推荐 船舶请求-->
+				<!-- <div id="tabs-14"></div> -->
+				<!--航线推荐 航线推荐-->
+				<div id="tabs-15">
+					<form action="sendMessage/sendRrAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="rrVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="rrVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="rrVo.source_id">
+						<div id="mmsi-m15">
+							<h2>目的MMSI</h2>
+							<input type="text" name="rrVo.destination_id">
+						</div>
+						<h2>
+							经纬度 <span id="add-hxtj" class="add info">添加</span>
+						</h2>
+						<div id="hxtjbox" class="diyBox">
+							<ul>
+								<li class="jw-line">
+									<div class="jw-col">
+										<input type="text" name="rrVo.latitudeDList">°<input
+											type="text" name="rrVo.latitudeMList">′<input
+											type="text" name="rrVo.latitudeSList">″<span>N</span>
+									</div>
+									<div class="jw-col">
+										<input type="text" name="rrVo.longitudeDList">°<input
+											type="text" name="rrVo.longitudeMList">′<input
+											type="text" name="rrVo.longitudeSList">″<span>E</span>
+									</div>
+									<div id="del-hxtj" class="del">-</div>
+								</li>
+							</ul>
+						</div>
+						<input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--航线气象 船舶请求-->
+				<!-- <div id="tabs-16"></div> -->
+				<!--航线气象 航线气象-->
+				<!-- <div id="tabs-17"></div> -->
+				<!--港口状况 船舶请求-->
+				<!-- <div id="tabs-18"></div> -->
+				<!--港口及锚地状况-->
+				<div id="tabs-19">
+					<form action="sendMessage/sendPsAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="ipt_bwNo19" checked="checked" value="0">6号
+							<input type="radio" name="ipt_bwNo19" value="1">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="psVo.source_id">
+						<div id="mmsi-m19">
+							<h2>目的MMSI</h2>
+							<input type="text" name="psVo.destination_id">
+						</div>
+						<h2>泊位总数</h2>
+						<input type="text" id="gkjmd-bwzs" name="psVo.berthTotal" readonly
+							style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-gkjmd-bwzs"></div>
+						<h2>停泊船舶数量</h2>
+						<input type="text" id="gkjmd-tbcbsl" name="psVo.moorageTotal"
+							readonly style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-gkjmd-tbcbsl"></div>
+						<h2>等候进港船舶数量</h2>
+						<input type="text" id="gkjmd-dhjgcbsl"
+							name="psVo.waitInboundTotal" readonly
+							style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-gkjmd-dhjgcbsl"></div>
+						<h2>港口锚地数量</h2>
+						<input type="text" id="gkjmd-gkmdsl" name="psVo.anchorageTotal"
+							readonly style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-gkjmd-gkmdsl"></div>
+						<h2>等候停泊船舶数量</h2>
+						<input type="text" id="gkjmd-dhtbcbsl"
+							name="psVo.waitMoorageTotal" readonly
+							style="border: 0; color: #f6931f; font-weight: bold;">
+						<div id="slider-gkjmd-dhtbcbsl"></div>
+						<input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--扩展船舶静态数据和航行相关信息-->
+				<div id="tabs-20">
+					<form action="sendMessage/sendNiAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="ipt_bwNo20" checked="checked" value="0">6号
+							<input type="radio" name="ipt_bwNo20" value="1">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="niVo.source_id">
+						<div id="mmsi-m20">
+							<h2>目的MMSI</h2>
+							<input type="text" name="niVo.destination_id">
+						</div>
+						<h2>报告出发港口</h2>
+						<select name="niVo.departurePort" class="stSlt">
+							<option value="0">需要报告</option>
+							<option value="1">不需报告</option>
+						</select>
+						<h2>船舶类型</h2>
+						<select name="niVo.shipType" class="stSlt">
+							<option value="0">需要报告</option>
+							<option value="1">不需报告</option>
+						</select>
+						<h2>动力类型</h2>
+						<select name="niVo.powerType" class="stSlt">
+							<option value="0">需要报告</option>
+							<option value="1">不需报告</option>
+						</select>
+						<h2>马力</h2>
+						<select name="niVo.horsepower" class="stSlt">
+							<option value="0">需要报告</option>
+							<option value="1">不需报告</option>
+						</select>
+						<h2>人员总数</h2>
+						<select name="niVo.personnelTotal" class="stSlt">
+							<option value="0">需要报告</option>
+							<option value="1">不需报告</option>
+						</select>
+						<h2>计划停泊码头</h2>
+						<select name="niVo.berthMarina" class="stSlt">
+							<option value="0">需要报告</option>
+							<option value="1">不需报告</option>
+						</select>
+						<h2>计划停泊时间</h2>
+						<select name="niVo.berthTime" class="stSlt">
+							<option value="0">需要报告</option>
+							<option value="1">不需报告</option>
+						</select> <input type="submit" value="发送" />
+					</form>
+				</div>
+				<!-- <div id="tabs-21"></div> -->
+				<!--播放-->
+				<div id="tabs-22">
+					<form action="sendMessage/sendTextAction.action" method="post">
+						<h2>报文分类</h2>
+						<div>
+							<input type="radio" name="textVo.messageNo" checked="checked"
+								value="6">6号 <input type="radio" name="textVo.messageNo"
+								value="8">8号
+						</div>
+						<h2>基站MMSI</h2>
+						<input type="text" name="textVo.source_id">
+						<div id="mmsi-m22">
+							<h2>目的MMSI</h2>
+							<input type="text" name="textVo.destination_id">
+						</div>
+						<h2>文本类型</h2>
+						<select name="wbtype" class="stSlt">
+							<option value="0">中文</option>
+							<option value="1">中英混发或英文</option>
+						</select>
+						<h2>报文内容</h2>
+						<textarea name="textVo.content"></textarea>
+						<input type="submit" value="发送" />
+					</form>
+				</div>
+				<!--航标遥测遥控-->
+				<!-- <div id="tabs-23"></div> -->
+			</div>
+		</div>
+	</div>
+</body>
+<script src="./js/util/custom.js"></script>
+</html>

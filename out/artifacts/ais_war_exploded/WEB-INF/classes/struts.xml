@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        " http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <constant name="struts.enable.DynamicMethodInvocation" value="true" />
+    <constant name="struts.devMode" value="false" />
+    <constant name="struts.configuration.xml.reload" value="true" />
+    <constant name="struts.locale" value="zh_CN" />
+    <constant name="struts.ui.theme" value="simple" />
+    <constant name="struts.i18n.encoding" value="UTF-8" />
+    <constant name="struts.objectFactory" value="spring" />
+    <constant name="struts.multipart.maxSize" value="1024000000" />
+    <constant name="struts.multipart.saveDir" value="/tmp" />
+    <package name="root" namespace="/" extends="struts-default">
+        <!-- upload file -->
+        <action name="resolveNc" class="resolveNcAction">
+            <interceptor-ref name="fileUpload">
+                <param name="allowedTypes">application/x-netcdf,application/octet-stream</param>
+                <param name="maximumSize">1024000000</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />
+            <param name="savePath">d:/netcdf_upload</param>
+            <result name="success">resolve.jsp</result>
+        </action>
+    </package>
+
+    <package name="json" namespace="/station" extends="json-default">
+        <!-- all stations name -->
+        <action name="allStaNames" class="stationAction" method="allStaNames">
+            <result type="json"></result>
+        </action>
+
+        <!-- del stations name -->
+        <action name="delStaNames" class="stationAction" method="delStaNames">
+            <result type="json"></result>
+        </action>
+
+        <!-- save Template -->
+        <action name="saveTemplate" class="templateAction" method="saveTemplate">
+            <result type="json"></result>
+        </action>
+
+        <!-- query Template List -->
+        <action name="queryTemList" class="templateAction" method="queryTemList">
+            <result type="json"></result>
+        </action>
+
+        <!-- query Template -->
+        <action name="queryTemplate" class="templateAction" method="queryTemplate">
+            <result type="json"></result>
+        </action>
+
+        <!-- modify Template -->
+        <action name="modifyTemplate" class="templateAction" method="modifyTemplate">
+            <result type="json"></result>
+        </action>
+
+        <!-- delete Template -->
+        <action name="delTemplate" class="templateAction" method="delTemplate">
+            <result type="json"></result>
+        </action>
+
+        <!-- save MessageValue -->
+        <action name="saveMsgV" class="msgValueAction" method="saveMsgV">
+            <result type="json"></result>
+        </action>
+
+        <!-- query all sendList -->
+        <action name="allSendList" class="msgSendAction" method="allMessageSendList">
+            <result type="json"></result>
+        </action>
+    </package>
+
+    <package name="broadcast" namespace="/broadcast" extends="json-default">
+        <!-- get netcdf file datetime -->
+        <action name="netcdfDateTime" class="netCdfDateTimeAction" method="netCdfDateTime">
+            <result type="json"></result>
+        </action>
+
+        <!-- action test -->
+        <action name="testAction" class="testAction">
+            <result name="success">resolve.jsp</result>
+        </action>
+    </package>
+
+    <package name="sendMessage" namespace="/sendMessage" extends="struts-default">
+        <!-- 海洋气象预报 -->
+        <action name="sendMwfAction" class="mwfAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+            <result name="error">/nfd.jsp</result>
+        </action>
+
+        <!-- 海洋环境预报 -->
+        <action name="sendMefAction" class="mefAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+            <result name="error">/nfd.jsp</result>
+        </action>
+
+        <!-- 海洋气象预警 -->
+        <action name="sendMwwAction" class="mwwAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 水文气象预报 -->
+        <action name="sendHwfAction" class="hwfAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 助航标注动态 -->
+        <action name="sendAmdAction" class="amdAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 碍航物 -->
+        <action name="sendNavAction" class="navAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 施工作业 -->
+        <action name="sendCwAction" class="cwAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 笨重拖带 -->
+        <action name="sendHtAction" class="htAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 军事演习 -->
+        <action name="sendMaAction" class="maAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 船舶遇险 -->
+        <action name="sendSdAction" class="sdAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 划定区域 -->
+        <action name="sendDaAction" class="daAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 划定区域不规则 -->
+        <action name="sendDiaAction" class="diaAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 航线推荐 -->
+        <action name="sendRrAction" class="rrAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 港口及锚地状况 -->
+        <action name="sendPsAction" class="psAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 扩展船舶静态数据和航行相关信息 -->
+        <action name="sendNiAction" class="niAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+
+        <!-- 中英播发 -->
+        <action name="sendTextAction" class="textAction" method="sendMessage">
+            <result name="success">/success.jsp</result>
+        </action>
+    </package>
+</struts>

@@ -1,0 +1,140 @@
+@charset "utf-8";
+/* CSS Document */
+body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,img,div{margin:0;padding:0;}
+input,select,button{font-size:12px;vertical-align:middle;}
+h1{ font-size:24px;}
+h2{ font-size:20px;}
+h3{ font-size:18px;}
+h4{ font-size:16px;}
+h5{ font-size:14px;}
+h6{ font-size:12px;}
+a{ text-decoration:none}
+textarea,input{	word-wrap:break-word;word-break:break-all;padding:0px;}
+li{list-style-type:none;}
+img{border:0 none;vertical-align:bottom}
+
+.FL{float:left;}
+.FR{float:right;}
+.clear{clear:both; height:0px; width:100%; font-size:1px; line-height:0px; visibility:hidden; overflow:hidden;}	
+
+html { overflow-x: hidden; overflow-y: hidden; }
+body{ font-family:"宋体";font-size:12px; background:#DBE7F7; color:#333;}
+#header{ height:98px}
+#sidebar{ width:210px; border:1px solid #B4CFED; margin-left:5px; float:left}
+#container{ border:1px solid #B4CFED; float:left; overflow:hidden; margin-left:5px}
+
+#sidebar h1{ font-size:12px; font-weight:normal; height:30px; line-height:28px; text-indent:12px; background:url(../images/bg_sidebarH1.jpg) no-repeat bottom; cursor:pointer}
+
+.fBox{ overflow-y: auto; background:#FFF; display:none}
+.f-hover{ display:block;}
+.fList{ padding:10px 12px}
+.fBox ul li{ height:20px; line-height:20px; background:url(../images/ico_aj.gif) no-repeat 0px center; text-indent:20px; width:186px; overflow:hidden;}
+.fBox ul li span{ float:left;}
+.ipt_checkBox{ float:right}
+.toolFbox{ height:21px; border:1px solid #B4CFED; border-left:none; border-right:none; background:url(../images/bg_toolFbox.jpg) repeat-x; line-height:21px; padding:0px 5px}
+
+.hovernone{ display:none}
+
+/*弹出窗口*/
+.winDiv{ width:890px; background:#FFF; position:absolute; height:430px; padding:15px; display:none; z-index:999}
+.openhover{ display:block}
+/*时间频度*/
+.timePd{ width:275px; overflow:hidden; float:left; margin-bottom:15px}
+.timePd .mt{ width:122px; height:31px; line-height:31px;}
+.timePd .mt h2{ background:url(../images/bg_mt.jpg) no-repeat; text-align:center; font-size:12px; font-weight:normal}
+.timePd .mc{ width:253px; border:1px solid #D7D7D7; padding:10px; overflow:hidden; height:151px;}
+.timePd .dt{ float:left; width:99px}
+.timePd .dd{ float:left;}
+.timePd ul li{ width:253px; overflow:hidden; padding:5px 0px; line-height:21px}
+.short{ width:30px; height:21px; line-height:21px; border:1px solid #cccccc; margin-right:3px}
+.long{ width:130px; height:21px; line-height:21px; border:1px solid #cccccc; margin-right:3px}
+
+.aisBf{ width:600px; overflow:hidden; float:left; position:relative; margin-left:15px}
+.aisBf .mt{ width:122px; height:31px; line-height:31px;}
+.aisBf .mt .qx{ position:absolute; right:0px; top:0px}
+.aisBf .mt h2{ background:url(../images/bg_mt.jpg) no-repeat; text-align:center; font-size:12px; font-weight:normal}
+.aisBf .mc{ width:598px; border:1px solid #D7D7D7; overflow:hidden; height:171px;}
+.aisBf .mc ul li{ float:left; padding:10px 5px 0px 5px; width:75px}
+
+.template{ width:398px; overflow:hidden; float:left}
+.template .mt{ width:122px; height:31px; line-height:31px;}
+.template .mt h2{ background:url(../images/bg_mt.jpg) no-repeat; text-align:center; font-size:12px; font-weight:normal}
+.template .mc{ width:396px; border:1px solid #D7D7D7; overflow:hidden;}
+.template_box{width:398px;overflow-y: auto; overflow-x:hidden; height:150px}
+.template .mc ul li{ width:376px; float:left; padding:10px 10px 0px 10px;}
+.template .dt{ float:left}
+.template .dd{ float:right; color:#cccccc; padding-right:10px}
+
+
+.template_edit{ width:472px; overflow:hidden; float:left; margin-left:15px; padding-top:25px}
+.template_edit ul li{ padding:5px 0px}
+.ipt_template_name{ width:225px; height:21px; line-height:21px; border:1px solid #cccccc;}
+.ipt_template_info{ width:470px; height:45px; line-height:21px; border:1px solid #cccccc;}
+
+.btn_sb{ width:100px; height:28px; background:#0B87E7; text-align:center; line-height:28px; border:none; color:#FFF; font-weight:bold; float:left; margin-top:10px}
+.btn_rst{ width:100px; height:28px; background:#CDCECF; text-align:center; line-height:28px; border:none; color:#FFF; font-weight:bold; float:left; margin-left:10px; margin-top:10px}
+
+.close-win{ position:absolute; right:8px; top:8px}
+
+.template-page{ width:376px; height:22px; overflow:hidden; line-height:22px; background:#eee; padding:0px 10px; border-top:1px solid #D7D7D7}
+.pagelist a{ margin-left:2px; color:#333}
+
+.bf-list .tab{ width:890px; overflow:hidden}
+.bf-list .tab span{ width:122px; height:31px; text-align:center; line-height:31px; background:url(../images/bg_mt.jpg) no-repeat; overflow:hidden; float:left; margin-right:3px; cursor:pointer}
+.bf-list .tab span.hover{ background:url(../images/bg_tab_hover.jpg) no-repeat;}
+.bf-list .bf-mc{ width:863px; overflow:hidden; border:1px solid #D7D7D7; padding:10px}
+.bf-list .bf-mc{ color:#666666}
+.bf-list .bf-mc ul{ width:861px; overflow:hidden; border:1px solid #B4CFED; border-left:none;border-top:none;}
+.bf-list .bf-mc ul li{ width:861px; float:left}
+.bf-list .bf-mc ul li div{ float:left; border-left:1px solid #B4CFED;border-top:1px solid #B4CFED; padding:6px; height:19px; line-height:19px; text-align:center}
+.bf-th{ font-weight:bold; background:#DBE7F7;}
+.bf-cbox{ width:48px;}
+.bf-xh{ width:59px;}
+.bf-bwlx{ width:108px;}
+.bf-time{ width:225px;}
+.bf-bfzt{ width:108px;}
+.bf-cz{ width:235px;}
+
+
+.bf-page{ padding:10px 5px}
+.bf-page-list{}
+.bf-page-list a{ color:#999999}
+.bf-page-list a.curr{ font-weight:bold; color:#666666}
+
+.hqChoose{ width:582px; overflow:hidden; float:left; position:relative;}
+.hqChoose .mt{ width:122px; height:31px; line-height:31px;}
+.hqChoose .mt .qx{ position:absolute; right:0px; top:0px}
+.hqChoose .mt h2{ background:url(../images/bg_mt.jpg) no-repeat; text-align:center; font-size:12px; font-weight:normal}
+.hqChoose .mc{ width:580px; border:1px solid #D7D7D7; overflow:hidden;}
+.hqChoose .mc .overBox{ width:580px;overflow-y: auto; overflow-x:hidden; height:330px}
+.hqChoose .mc h3{ clear:both; font-size:12px; padding:5px 10px; border-bottom:1px solid #EEE;}
+.hqChoose .mc ul{ clear:both; padding:0px 10px}
+.hqChoose .mc ul li{ float:left; width:135px; padding:5px 0px}
+.hqChoose .template-page{ width:560px; height:22px; overflow:hidden; line-height:22px; background:#eee; padding:0px 10px; border-top:1px solid #D7D7D7}
+
+.hqRbox{ float:left; width:270px; margin-left:10px}
+.hqRbox ul li { width:270px; clear:both; padding:5px 0px; overflow:hidden}
+.hqRbox ul li .dt{ float:left; margin-right:10px}
+.hqRbox ul li .dd{ float:left;}
+
+.hqRbox ul li .dd div{ padding:5px 0px}
+.ipt_Hqname{ width:201px; height:21px; line-height:21px;}
+.ipt_Jw{ width:80px; height:21px; line-height:21px;}
+
+/* 数值预报 */
+.szyb_jw{ width:406px; overflow:hidden; float:left;}
+.szyb_jw ul{ width:406px; overflow-y: auto; overflow-x:hidden; height:305px;}
+.szyb_jw ul li{ float:left; margin-bottom:5px}
+.szyb_jw ul li .dt{ float:left;}
+.szyb_jw ul li .dd{ float:left;}
+
+.szyb_mb{ width:450px; float:right}
+.szyb_mb{ width:450px; float:right}
+.szyb_mb ul li{width:450px; overflow:hidden; padding:5px 0px}
+.szyb_mb ul li .dd div{ padding:5px 0px}
+.szyb_mb .dt{ float:left; width:60px}
+.szyb_mb .dd{ float:left;}
+
+.ipt_szyb{ width:130px; height:21px; border:1px solid #cccccc;}
+.add{ margin-left:10px; margin-top:5px; cursor:pointer}
+.del{ margin-left:4px; margin-top:5px; cursor:pointer}

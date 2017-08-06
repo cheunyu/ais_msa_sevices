@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.scyb.aisweather.webservice.bo.Ocean" table="OCEAN" schema="WEATHER">
+        <id name="guid">
+            <column name="GUID" sql-type="varchar2" length="64" not-null="true"/>
+        </id>
+        <property name="oceanName">
+            <column name="OCEAN_NAME" sql-type="varchar2" length="32"/>
+        </property>
+        <property name="forecastTime">
+            <column name="FORECAST_TIME" sql-type="varchar2" length="32"/>
+        </property>
+        <property name="phenomenon">
+            <column name="PHENOMENON" sql-type="varchar2" length="32"/>
+        </property>
+        <property name="windDirection">
+            <column name="WIND_DIRECTION" sql-type="varchar2" length="32"/>
+        </property>
+        <property name="windPower">
+            <column name="WIND_POWER" sql-type="varchar2" length="32"/>
+        </property>
+        <property name="waveHigh">
+            <column name="WAVE_HIGH" sql-type="number" precision="2" scale="1"/>
+        </property>
+        <property name="visibility">
+            <column name="VISIBILITY" sql-type="number" precision="22"/>
+        </property>
+        <property name="createDate">
+            <column name="CREATE_DATE" sql-type="date"/>
+        </property>
+    </class>
+</hibernate-mapping>

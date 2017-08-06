@@ -1,0 +1,38 @@
+@charset "utf-8";
+/* CSS Document */
+dl,dt,dd{margin: 0px; padding: 0px;}
+body{padding:0px;margin:0px;font-size:12px;}
+h2{font-size:14px}
+ul,li{ margin: 0px; padding: 0px; list-style: none;}
+a{ text-decoration: none;}
+select {width: 200px;}
+
+.clear{ clear: both}
+.info{ color: #999999; font-size: 12px; font-weight: normal;}
+
+#tabs{ background: none !important; border: none !important;}
+.leftBox{ float:left; width: 320px;}
+.leftBox ul li{ line-height: 21px; clear: left; width: 100%;}
+.leftBox ul li a{ color: #333333}
+.rightBox{ float:left;}
+
+.col-1{float:left; width:220px; margin:0px 10px 0px 0px}
+.col-2{float:left; width: 317px;}
+
+.jw-line{ clear: both; margin-bottom: 5px; line-height: 20px; overflow: hidden;}
+.jw-line div{float: left;}
+.jw-col{ border:1px solid #C4C4C4; width:140px; float:left; margin-right:10px; font-family:Arial; font-size: 14px;}
+.jw-col span{ display: inline-block; width:30px; text-align:right}
+.jw-col input{ border:none; width:30px; text-align:right}
+
+.diyBox{ margin-top: 10px}
+
+#ysBox{margin-top: 10px}
+#ysBox select{ width: 317px;}
+.add,.del{cursor: pointer;}
+
+.yjbox,.zhbbox,.hdqytxbox{display:none}
+
+.swtab{ width: 100%; clear: left}
+.swtab .col{ float: left; width: 150px;}
+.swtab .gctime,.swtab .dctime,.sw{ width:140px;}

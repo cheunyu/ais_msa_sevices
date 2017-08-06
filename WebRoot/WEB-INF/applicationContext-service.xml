@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    
+	<!-- NETCDF提取数据Service -->
+	<bean id="ncDataServiceImpl"
+		class="com.scyb.aisweather.nc.service.impl.NetCdfDataServiceImpl"
+		scope="prototype"></bean>
+
+	<!-- 串口封装数据Service -->
+	<bean id="serialDataServiceImpl"
+		class="com.scyb.aisweather.serial.service.impl.SerialDataServiceImpl"
+		scope="prototype"></bean>
+
+	<!-- 海洋气象预报 -->
+	<bean id="mwfServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.MarineWeatherForecastServiceImpl"
+		scope="prototype">
+		<property name="ncDataServiceImpl" ref="ncDataServiceImpl"></property>
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 海洋环境预报 -->
+	<bean id="mefServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.MarineEnvironmentForecastServiceImpl"
+		scope="prototype">
+		<property name="ncDataServiceImpl" ref="ncDataServiceImpl"></property>
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 海洋气象预警 -->
+	<bean id="mwwServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.MarineWeatherWarnServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 海洋环境预报 -->
+	<bean id="vdmSocketImpl" class="com.scyb.aisweather.socket.service.impl.VDMSocketImpl">
+	</bean>
+
+	<!-- 海洋环境预报 -->
+	<bean id="ncDateTimeServiceImpl"
+		class="com.scyb.aisweather.common.service.impl.NetCdfDateTimeServiceImpl">
+	</bean>
+
+
+	<!-- 水文气象预报 -->
+	<bean id="hwfServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.HydrologyWeatherForecastServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 助航标注动态 -->
+	<bean id="amdServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.AidsMarkedDynamicServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 碍航物 -->
+	<bean id="navServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.NavigationServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 施工作业 -->
+	<bean id="cwServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.ConstructionWorkServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 笨重拖带 -->
+	<bean id="htServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.HeavyTowServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 军事演习 -->
+	<bean id="maServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.MilitaryActivitiyServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 船舶遇险 -->
+	<bean id="sdServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.ShipDistressServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 划定区域 -->
+	<bean id="daServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.DemarcatedAreaServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 划定区域不规则 -->
+	<bean id="diaServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.DemarcatedIrregulaAreaServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 航线推荐 -->
+	<bean id="rrServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.RecommendedRouteServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 港口及锚地状况 -->
+	<bean id="psServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.PortStatusServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 扩展船舶静态数据和航行相关信息 -->
+	<bean id="niServiceImpl"
+		class="com.scyb.aisweather.vdl.service.impl.NavigationalInformationServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+
+	<!-- 中英文播发 -->
+	<bean id="textServiceImpl" class="com.scyb.aisweather.vdl.service.impl.TextServiceImpl"
+		scope="prototype">
+		<property name="serialDataServiceImpl" ref="serialDataServiceImpl"></property>
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+	</bean>
+	
+	<!-- 解析VDM -->
+	<bean id="resolveVDMServiceImpl" class="com.scyb.aisweather.vdl.service.impl.ResolveVDMServiceImpl"
+		scope="prototype">
+	</bean>
+	
+	<!-- 解析报文 -->
+	<bean id="decodeMessageServiceImpl" class="com.scyb.aisweather.vdl.service.impl.DecodeMessageServiceImpl"
+		scope="prototype">
+		<property name="resolveVDMServiceImpl" ref="resolveVDMServiceImpl"></property>
+	</bean>
+	
+	<!-- 线程接收VDM -->
+	<bean id="webSocketService" class="com.scyb.aisweather.socket.test.WebSocketTest"
+		scope="prototype">
+		<property name="vdmSocketImpl" ref="vdmSocketImpl"></property>
+		<property name="resolveVDMServiceImpl" ref="resolveVDMServiceImpl"></property>
+		<property name="decodeMessageServiceImpl" ref="decodeMessageServiceImpl"></property>
+	</bean>
+	
+</beans>

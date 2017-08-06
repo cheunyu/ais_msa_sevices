@@ -1,0 +1,912 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>海洋气象及环境综合服务保障系统</title>
+<link rel="stylesheet" type="text/css" href="style/global.css">
+<script src="js/util/jquery.js"></script>
+<script>
+function setTab(name,cursel,n){
+	for(i=1;i<=n;i++){
+		var menu=document.getElementById(name+i);
+		var con=document.getElementById("con_"+name+"_"+i);
+		menu.className=i==cursel?"hover":"";
+		con.style.display=i==cursel?"block":"none";
+	}
+}
+
+
+$(document).ready(function(){
+	var cH=document.documentElement.clientHeight;
+	var cW=document.documentElement.clientWidth;
+	var sidebar = document.getElementById("sidebar");
+	var container = document.getElementById("container");
+	sidebar.style.height = cH - 100 +"px";
+	container.style.width = cW - 229 +"px";
+	container.style.height = cH - 100 +"px";
+	$(".winDiv").css("left", cW/2 - 354 +"px");
+	$(".winDiv").css("top", (cH-362)/2 +"px");
+	
+	$("#sidebar h1").click(function() {
+        $(".fBox").removeClass("f-hover");
+		$(this).next(".fBox").addClass("f-hover");
+		wid = $(this).attr('id');
+		openWid = wid + "-box";
+		$(".winDiv").removeClass("openhover");
+		$("#"+openWid).addClass("openhover");	
+    });
+	
+	$(".close-win").click(function() {
+        $(this).parent().removeClass("openhover");
+    });	
+	
+	$(".add").live("click",function(){
+	  	$(".szyb_jw ul").append("<li><div class='dt'>经度 <input type='text' name='sz-jd[]' class='ipt_szyb'> 纬度 <input type='text' name='sz-wd[]' class='ipt_szyb'></div><div class='dd'><img src='images/add.jpg' class='add'><img src='images/del.jpg' class='del'></div></li>");
+	});
+
+	$(".del").live("click",function(){
+		var li_number = $(".szyb_jw ul li").length;
+		if (li_number == 1){
+			return;
+		}
+	  	$(".szyb_jw ul li:last").remove();
+	});
+
+    $("#chk_all").click(function(){
+        $("input[name='aj_name']").attr("checked",$(this).attr("checked"));
+         
+        $("input[name='aj_name']").each(function() {
+            
+        });
+    });
+
+    $("#chk_all1").click(function(){
+        $("input[name='ajbf_name']").attr("checked",$(this).attr("checked"));
+         
+        $("input[name='ajbf_name']").each(function() {
+            
+        });
+    });
+
+    $("#chk_all2").click(function(){
+        $("input[name='mb_name']").attr("checked",$(this).attr("checked"));
+         
+        $("input[name='mb_name']").each(function() {
+            
+        });
+    });
+
+    $("#chk_all3").click(function(){
+        $("input[name='hq_name']").attr("checked",$(this).attr("checked"));
+         
+        $("input[name='hq_name']").each(function() {
+            
+        });
+    });
+
+	
+});	
+</script>
+
+<script src="http://202.136.208.185:8082/MSAAPI/MSAchartApiWeb.js"
+	type="text/javascript">
+	
+</script>
+<script src="http://202.136.208.185:8082/MSAAPI/Yima_JsGraphics.js"
+	type="text/javascript">
+	
+</script>
+<script src="http://202.136.208.185:8082/MSAAPI/Grapgics.js"
+	type="text/javascript">
+	
+</script>
+<script src="./js/util/date/WdatePicker.js" type="text/javascript"></script>
+<script src="./js/util/jquery.validate.js" type="text/javascript"></script>
+<script src="./js/util/validate.js" type="text/javascript"></script>
+<script src="./js/util/xmlhttp.js" type="text/javascript"></script>
+<script src="./js/map/conversion.js" type="text/javascript"></script>
+<script src="./js/map/init.js" type="text/javascript"></script>
+<script src="./js/map/map_info.js" type="text/javascript"></script>
+<script src="./js/map/conversion.js" type="text/javascript"></script>
+<script src="./js/template.js" type="text/javascript"></script>
+<script src="./js/station.js" type="text/javascript"></script>
+<script src="./js/message.js" type="text/javascript"></script>
+<script src="./js/sendlist.js" type="text/javascript"></script>
+</head>
+
+<body onload="initMap();allStationFun();showTemListFn();allSendListFn();">
+	<div id="header">
+		<div id="logo">
+			<img src="images/logo.jpg" />
+		</div>
+	</div>
+	<div id="sidebar">
+		<h1>岸基管理设置</h1>
+		<div class="fBox f-hover">
+			<div id="staNames" class="fList"></div>
+			<div class="toolFbox">
+				<span class="FL"><input type="checkbox" id="chk_all">
+					全选</span> <span class="FR"><font onclick="delStationFun();">删除</font><!--  | <font onClick="">修改</font> | 测试 --></span>
+			</div>
+		</div>
+		<h1 id="mt3">播发设置</h1>
+		<div class="fBox"></div>
+		<h1 id="mt4">数值预报</h1>
+		<div class="fBox"></div>
+		<!-- 
+		<h1 id="mt5">海区预报</h1>
+		<div class="fBox"></div>
+		 -->
+		<h1 id="mt6" onClick="allSendListFn();">播发队列管理</h1>
+		<div class="fBox"></div>
+	</div>
+	
+	<!-- 电子海图 -->
+	<div id="container">
+		<!-- 当前经纬度，比例尺信息 -->
+		<div id="mapInfo"
+				style="position: absolute; padding: 5px; z-index: 501; left: 0px; bottom: 0px; filter: alpha(opacity =     80); opacity: 0.8; background-color: #FFFFFF;"></div>
+	</div>
+	<div id="mt3-box" class="winDiv">
+		<a href="javascript:;" class="close-win"><img class="ico_close"
+			src="images/ico_close.jpg"></a>
+		<div class="timePd">
+			<div class="mt">
+				<h2>时间频度设置</h2>
+			</div>
+			<div class="mc">
+				<ul>
+					<!-- 
+					<li><input type="radio"> 单次播放 <input type="radio"> 重复播放</li>
+					 -->
+					<li><div class="dt">
+							<input id="INTERVAL_RADIO" type="radio" name="timeset" value="INTERVAL" onClick="radioChooseFn();"> 间隔发送
+						</div>
+						<div class="dd">
+							<input id="INTERVAL_H" type="text" class="short">时<input id="INTERVAL_M" type="text"
+								class="short">分<input id="INTERVAL_S" type="text" class="short">秒
+						</div></li>
+					<li><div class="dt">
+							<input id="DEFINITE_RADIO" type="radio" name="timeset" value="DEFINITE" onClick="radioChooseFn();"> 定时发送
+						</div>
+						<div class="dd">
+							<input id="DEFINITE_DATE" type="text" class="long" onFocus="WdatePicker({startDate:'%y-%M-01 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})">
+						</div></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="aisBf">
+			<div class="mt">
+				<h2>岸基播发设置</h2>
+				<div class="qx">
+					<input type="checkbox" id="chk_all1"> 全选
+				</div>
+			</div>
+			<div id="temStas" class="mc">
+				
+			</div>
+		</div>
+		<div class="clear"></div>
+
+		<div class="template">
+			<div class="mt">
+				<h2>模板</h2>
+			</div>
+			<div class="mc">
+				<ul id="templateList" class="template_box">
+				</ul>
+				<div class="template-page">
+					<div class="FL">
+						<input type="checkbox" id="chk_all2"> 全选|<a href="#" onClick="modifyTemplateFn();">修改</a>| <a
+							href="#" onClick="delTemplateFn();">删除</a>
+					</div>
+					<!-- 
+					<div class="FR pagelist">
+						<a href="#"><</a><a href="#">1</a><a href="#">2</a><a href="#">3</a><a
+							href="#">></a>
+					</div>
+					 -->
+				</div>
+			</div>
+		</div>
+
+		<div class="template_edit">
+			<ul>
+				<li>模板名</li>
+				<li><input id="temName" type="text" class="ipt_template_name"></li>
+				<li>模板说明</li>
+				<li><textarea id="temRemark" class="ipt_template_info"></textarea></li>
+				<li><button class="btn_sb" onClick="saveTemFn();">保存模板</button>
+					<button class="btn_rst" onClick="resetTemplate();">重置模板</button></li>
+			</ul>
+		</div>
+
+	</div>
+	
+	<div id="mt4-box" class="winDiv">
+		<a href="javascript:;" class="close-win"><img class="ico_close"
+			src="images/ico_close.jpg"></a>
+		<div class="szyb_jw">
+			<ul>
+				<li>
+					<div class="dt">
+						经度 <input type="text" name='sz-jd[]' class="ipt_szyb"> 纬度
+						<input type="text" name='sz-wd[]' class="ipt_szyb">
+					</div>
+					<div class="dd">
+						<img src="images/add.jpg" class="add"><img
+							src="images/del.jpg" class="del">
+					</div>
+				</li>
+				<li>
+					<div class="dt">
+						经度 <input type="text" name='sz-jd[]' class="ipt_szyb"> 纬度
+						<input type="text" name='sz-wd[]' class="ipt_szyb">
+					</div>
+					<div class="dd">
+						<img src="images/add.jpg" class="add"><img
+							src="images/del.jpg" class="del">
+					</div>
+				</li>
+				<li>
+					<div class="dt">
+						经度 <input type="text" name='sz-jd[]' class="ipt_szyb"> 纬度
+						<input type="text" name='sz-wd[]' class="ipt_szyb">
+					</div>
+					<div class="dd">
+						<img src="images/add.jpg" class="add"><img
+							src="images/del.jpg" class="del">
+					</div>
+				</li>
+				<li>
+					<div class="dt">
+						经度 <input type="text" name='sz-jd[]' class="ipt_szyb"> 纬度
+						<input type="text" name='sz-wd[]' class="ipt_szyb">
+					</div>
+					<div class="dd">
+						<img src="images/add.jpg" class="add"><img
+							src="images/del.jpg" class="del">
+					</div>
+				</li>
+				<li>
+					<div class="dt">
+						经度 <input type="text" name='sz-jd[]' class="ipt_szyb"> 纬度
+						<input type="text" name='sz-wd[]' class="ipt_szyb">
+					</div>
+					<div class="dd">
+						<img src="images/add.jpg" class="add"><img
+							src="images/del.jpg" class="del">
+					</div>
+				</li>
+				<li>
+					<div class="dt">
+						经度 <input type="text" name='sz-jd[]' class="ipt_szyb"> 纬度
+						<input type="text" name='sz-wd[]' class="ipt_szyb">
+					</div>
+					<div class="dd">
+						<img src="images/add.jpg" class="add"><img
+							src="images/del.jpg" class="del">
+					</div>
+				</li>
+				<li>
+					<div class="dt">
+						经度 <input type="text" name='sz-jd[]' class="ipt_szyb"> 纬度
+						<input type="text" name='sz-wd[]' class="ipt_szyb">
+					</div>
+					<div class="dd">
+						<img src="images/add.jpg" class="add"><img
+							src="images/del.jpg" class="del">
+					</div>
+				</li>
+				<li>
+					<div class="dt">
+						经度 <input type="text" name='sz-jd[]' class="ipt_szyb"> 纬度
+						<input type="text" name='sz-wd[]' class="ipt_szyb">
+					</div>
+					<div class="dd">
+						<img src="images/add.jpg" class="add"><img
+							src="images/del.jpg" class="del">
+					</div>
+				</li>
+				<li>
+					<div class="dt">
+						经度 <input type="text" name='sz-jd[]' class="ipt_szyb"> 纬度
+						<input type="text" name='sz-wd[]' class="ipt_szyb">
+					</div>
+					<div class="dd">
+						<img src="images/add.jpg" class="add"><img
+							src="images/del.jpg" class="del">
+					</div>
+				</li>
+				<li>
+					<div class="dt">
+						经度 <input type="text" name='sz-jd[]' class="ipt_szyb"> 纬度
+						<input type="text" name='sz-wd[]' class="ipt_szyb">
+					</div>
+					<div class="dd">
+						<img src="images/add.jpg" class="add"><img
+							src="images/del.jpg" class="del">
+					</div>
+				</li>
+			</ul>
+			<button class="btn_sb" onClick="createMsgValueFn();">生成报文</button>
+			<button class="btn_rst">重置报文</button>
+		</div>
+		<div class="szyb_mb">
+			<ul>
+				<li><div class="dt">选择模板</div>
+					<div id="temOptionValue" class="dd">
+					</div></li>
+				<li>
+					<div class="dt">数据类型</div>
+					<div class="dd">
+						<div>
+							<input id="windDirValue" name="dataTypeValue" type="checkbox" value="windDir"> 风向 <input id="windSpdValue" name="dataTypeValue" type="checkbox" value="windSpd">
+							风速 <input type="checkbox"> 台风
+						</div>
+						<div>
+							<input id="currSpdValue" name="dataTypeValue" type="checkbox" value="currSpd"> 流速 <input id="currDirValue" name="dataTypeValue" type="checkbox" value="currDir"> 
+							流向
+						</div>
+						<div>
+							<input id="waveHsValue" name="dataTypeValue" type="checkbox" value="waveHs"> 波高 <input id="waveDirValue" name="dataTypeValue" type="checkbox" value="waveDir">
+							波向
+						</div>
+						<div>
+							<input id="waterTempValue" name="dataTypeValue" type="checkbox" value="waterTemp"> 海温
+						</div>
+						<div>
+							<input id="airTempValue" name="dataTypeValue" type="checkbox" value="airTemp">
+							气温 <input id="slpValue" name="dataTypeValue" type="checkbox" value="slp"> 气压
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="dt">数据时间</div>
+					<div class="dd">
+						<input name="dataTimeValue" type="radio" value="1"> 今天 <input name="dataTimeValue" type="radio" value="3"> 未来3天
+						<input name="dataTimeValue" type="radio" value="7"> 未来7天
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div id="mt5-box" class="winDiv">
+		<a href="javascript:;" class="close-win"><img class="ico_close"
+			src="images/ico_close.jpg"></a>
+		<div class="hqChoose">
+			<div class="mt">
+				<h2>选择海区</h2>
+			</div>
+			<div class="mc">
+				<div class="overBox">
+					<h3>渤海海区</h3>
+					<ul>
+						<li><input type="checkbox" name="hq_name"> 渤海北部</li>
+						<li><input type="checkbox" name="hq_name"> 辽东半岛西部</li>
+						<li><input type="checkbox" name="hq_name"> 辽东半岛南部</li>
+						<li><input type="checkbox" name="hq_name"> 秦皇岛</li>
+						<li><input type="checkbox" name="hq_name"> 唐山</li>
+						<li><input type="checkbox" name="hq_name"> 沧州</li>
+						<li><input type="checkbox" name="hq_name"> 渤海南部</li>
+						<li><input type="checkbox" name="hq_name"> 渤海海峡中南部</li>
+						<li><input type="checkbox" name="hq_name"> 山东半岛北部</li>
+					</ul>
+					<h3>黄海海区</h3>
+					<ul>
+						<li><input type="checkbox" name="hq_name"> 辽宁半岛东部</li>
+						<li><input type="checkbox" name="hq_name"> 山东半岛东部</li>
+						<li><input type="checkbox" name="hq_name"> 山东半岛南部</li>
+						<li><input type="checkbox" name="hq_name"> 连云港</li>
+						<li><input type="checkbox" name="hq_name"> 盐城</li>
+						<li><input type="checkbox" name="hq_name"> 南通</li>
+					</ul>
+					<h3>东海海区</h3>
+					<ul>
+						<li><input type="checkbox" name="hq_name"> 上海</li>
+						<li><input type="checkbox" name="hq_name"> 浙江北部</li>
+						<li><input type="checkbox" name="hq_name"> 浙江中部</li>
+						<li><input type="checkbox" name="hq_name"> 浙江南部</li>
+					</ul>
+					<h3>渤海海区</h3>
+					<ul>
+						<li><input type="checkbox" name="hq_name"> 渤海北部</li>
+						<li><input type="checkbox" name="hq_name"> 辽东半岛西部</li>
+						<li><input type="checkbox" name="hq_name"> 辽东半岛南部</li>
+						<li><input type="checkbox" name="hq_name"> 秦皇岛</li>
+						<li><input type="checkbox" name="hq_name"> 唐山</li>
+						<li><input type="checkbox" name="hq_name"> 沧州</li>
+						<li><input type="checkbox" name="hq_name"> 渤海南部</li>
+						<li><input type="checkbox" name="hq_name"> 渤海海峡中南部</li>
+						<li><input type="checkbox" name="hq_name"> 山东半岛北部</li>
+					</ul>
+					<h3>黄海海区</h3>
+					<ul>
+						<li><input type="checkbox" name="hq_name"> 辽宁半岛东部</li>
+						<li><input type="checkbox" name="hq_name"> 山东半岛东部</li>
+						<li><input type="checkbox" name="hq_name"> 山东半岛南部</li>
+						<li><input type="checkbox" name="hq_name"> 连云港</li>
+						<li><input type="checkbox" name="hq_name"> 盐城</li>
+						<li><input type="checkbox" name="hq_name"> 南通</li>
+					</ul>
+					<h3>东海海区</h3>
+					<ul>
+						<li><input type="checkbox" name="hq_name"> 上海</li>
+						<li><input type="checkbox" name="hq_name"> 浙江北部</li>
+						<li><input type="checkbox" name="hq_name"> 浙江中部</li>
+						<li><input type="checkbox" name="hq_name"> 浙江南部</li>
+					</ul>
+				</div>
+				<div class="clear"></div>
+				<div class="template-page">
+					<div class="FL">
+						<input type="checkbox" id="chk_all3"> 全选|<a href="#">修改</a>|<a
+							href="#">删除</a>
+					</div>
+				</div>
+			</div>
+			<button class="btn_sb">生成报文</button>
+			<!-- <button class="btn_rst">重置报文</button> -->
+		</div>
+
+		<div class="hqRbox">
+			<ul>
+				<li><div class="dt">选择模板</div>
+					<div id="temOptionArea" class="dd">
+					</div></li>
+				<li>
+					<div class="dt">数据类型</div>
+					<div class="dd">
+						<div>
+							<input type="checkbox"> 风向 <input type="checkbox">
+							风速 <input type="checkbox"> 台风
+						</div>
+						<div>
+							<input type="checkbox"> 流速 <input type="checkbox">
+							流向
+						</div>
+						<div>
+							<input type="checkbox"> 波高 <input type="checkbox">
+							波向
+						</div>
+						<div>
+							<input type="checkbox"> 海温
+						</div>
+						<div>
+							<input type="checkbox"> 天气现象 <input type="checkbox">
+							气温 <input type="checkbox"> 气压
+						</div>
+					</div>
+				</li>
+				<li><div class="dt">数据时间</div>
+					<div class="dd">
+						<input type="radio"> 今天 <input type="radio"> 未来三天
+						<input type="radio"> 未来七天
+					</div></li>
+				<li><div class="dt">海区名称</div>
+					<div class="dd">
+						<input type="text" class="ipt_Hqname">
+					</div></li>
+				<li>
+					<div class="dt">海区范围</div>
+					<div class="dd">
+						<div>
+							经度 <input type="text" class="ipt_Jw"> - <input
+								type="text" class="ipt_Jw">
+						</div>
+						<div>
+							纬度 <input type="text" class="ipt_Jw"> - <input
+								type="text" class="ipt_Jw">
+						</div>
+					</div>
+				</li>
+			</ul>
+			<button class="btn_sb">生成报文</button>
+		</div>
+
+	</div>
+
+	<div id="mt6-box" class="winDiv">
+		<a href="javascript:;" class="close-win"><img class="ico_close"
+			src="images/ico_close.jpg"></a>
+		<div class="bf-list">
+			<div class="tab">
+				<span class="hover" id="a1" onmousemove="setTab('a',1,5)">全部</span>
+					<span id="a2" onmousemove="setTab('a',2,5)">等待播发</span> <span
+					id="a3" onmousemove="setTab('a',3,5)">播发成功</span> <span id="a4"
+					onmousemove="setTab('a',4,5)">播发失败</span> <!-- <span id="a5"
+					onmousemove="setTab('a',5,5)">查询导出</span> -->
+			</div>
+			<div class="bf-mc">
+				<div id="con_a_1">
+					<ul>
+						<li class="bf-th">
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">序号</div>
+							<div class="bf-bwlx">报文类型</div>
+							<div class="bf-time">生成时间</div>
+							<div class="bf-bfzt">播发状态</div>
+							<div class="bf-cz">操作</div>
+						</li>
+						<li>
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">1</div>
+							<div class="bf-bwlx">数值预报</div>
+							<div class="bf-time">2013-08-20 15:30:02</div>
+							<div class="bf-bfzt">等待播发</div>
+							<div class="bf-cz">
+								<a href="#"><img src="images/bf-list/ico_1.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_2.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_3.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_4.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_5.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_6.jpg"></a>
+							</div>
+						</li>
+						<li>
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">2</div>
+							<div class="bf-bwlx">数值预报</div>
+							<div class="bf-time">2013-08-20 15:30:02</div>
+							<div class="bf-bfzt">等待播发</div>
+							<div class="bf-cz">
+								<a href="#"><img src="images/bf-list/ico_1.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_2.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_3.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_4.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_5.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_6.jpg"></a>
+							</div>
+						</li>
+						<li>
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">3</div>
+							<div class="bf-bwlx">数值预报</div>
+							<div class="bf-time">2013-08-20 15:30:02</div>
+							<div class="bf-bfzt">等待播发</div>
+							<div class="bf-cz">
+								<a href="#"><img src="images/bf-list/ico_1.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_2.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_3.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_4.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_5.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_6.jpg"></a>
+							</div>
+						</li>
+						<li>
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">4</div>
+							<div class="bf-bwlx">数值预报</div>
+							<div class="bf-time">2013-08-20 15:30:02</div>
+							<div class="bf-bfzt">等待播发</div>
+							<div class="bf-cz">
+								<a href="#"><img src="images/bf-list/ico_1.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_2.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_3.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_4.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_5.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_6.jpg"></a>
+							</div>
+						</li>
+						<li>
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">5</div>
+							<div class="bf-bwlx">数值预报</div>
+							<div class="bf-time">2013-08-20 15:30:02</div>
+							<div class="bf-bfzt">等待播发</div>
+							<div class="bf-cz">
+								<a href="#"><img src="images/bf-list/ico_1.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_2.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_3.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_4.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_5.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_6.jpg"></a>
+							</div>
+						</li>
+						<li>
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">6</div>
+							<div class="bf-bwlx">数值预报</div>
+							<div class="bf-time">2013-08-20 15:30:02</div>
+							<div class="bf-bfzt">等待播发</div>
+							<div class="bf-cz">
+								<a href="#"><img src="images/bf-list/ico_1.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_2.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_3.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_4.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_5.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_6.jpg"></a>
+							</div>
+						</li>
+						<li>
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">7</div>
+							<div class="bf-bwlx">数值预报</div>
+							<div class="bf-time">2013-08-20 15:30:02</div>
+							<div class="bf-bfzt">等待播发</div>
+							<div class="bf-cz">
+								<a href="#"><img src="images/bf-list/ico_1.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_2.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_3.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_4.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_5.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_6.jpg"></a>
+							</div>
+						</li>
+						<li>
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">8</div>
+							<div class="bf-bwlx">数值预报</div>
+							<div class="bf-time">2013-08-20 15:30:02</div>
+							<div class="bf-bfzt">等待播发</div>
+							<div class="bf-cz">
+								<a href="#"><img src="images/bf-list/ico_1.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_2.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_3.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_4.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_5.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_6.jpg"></a>
+							</div>
+						</li>
+						<li>
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">9</div>
+							<div class="bf-bwlx">数值预报</div>
+							<div class="bf-time">2013-08-20 15:30:02</div>
+							<div class="bf-bfzt">等待播发</div>
+							<div class="bf-cz">
+								<a href="#"><img src="images/bf-list/ico_1.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_2.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_3.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_4.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_5.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_6.jpg"></a>
+							</div>
+						</li>
+						<li>
+							<div class="bf-cbox">
+								<input type="checkbox">
+							</div>
+							<div class="bf-xh">10</div>
+							<div class="bf-bwlx">数值预报</div>
+							<div class="bf-time">2013-08-20 15:30:02</div>
+							<div class="bf-bfzt">等待播发</div>
+							<div class="bf-cz">
+								<a href="#"><img src="images/bf-list/ico_1.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_2.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_3.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_4.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_5.jpg"></a> <a
+									href="#"><img src="images/bf-list/ico_6.jpg"></a>
+							</div>
+						</li>
+					</ul>
+					<div class="bf-page">
+						<div class="FL">
+							<a href="#">全选</a>/<a href="#">删除</a>
+						</div>
+						<div class="FR bf-page-list">
+							<a href="#">上一页</a> <a href="#">1</a> <a href="#" class="curr">2</a>
+							<a href="#">3</a> <a href="#">4</a> <a href="#">5</a> <a href="#">下一页</a>
+						</div>
+					</div>
+
+					<div id="con_a_2" style="display:none"></div>
+					<div id="con_a_3" style="display:none"></div>
+					<div id="con_a_4" style="display:none"></div>
+					<div id="con_a_5" style="display:none"></div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="mt6-box" class="winDiv">
+		<a href="javascript:;" class="close-win"><img class="ico_close"
+			src="images/ico_close.jpg"></a>
+		<div class="bf-list">
+			<div class="tab">
+				<span class="hover" id="a1" onmousemove="setTab('a',1,5)">全部</span>
+				<span id="a2" onmousemove="setTab('a',2,5)">等待播发</span> <span
+					id="a3" onmousemove="setTab('a',3,5)">播发成功</span> <span id="a4"
+					onmousemove="setTab('a',4,5)">播发失败</span> <span id="a5"
+					onmousemove="setTab('a',5,5)">查询导出</span>
+			</div>
+			<div class="bf-mc">
+				<div id="con_a_1">
+					<table width="100%" border="0" cellpadding="6" cellspacing="1"
+						bgcolor="#E1E1E1">
+						<tr>
+							<th bgcolor="#ECEBE9"><input type="checkbox"></th>
+							<th bgcolor="#ECEBE9">序号</th>
+							<th bgcolor="#ECEBE9">报文类型</th>
+							<th bgcolor="#ECEBE9">生成时间</th>
+							<th bgcolor="#ECEBE9">播发状态</th>
+							<th bgcolor="#ECEBE9">操作</th>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#FFFFFF"><input type="checkbox"></td>
+							<td align="center" bgcolor="#FFFFFF">1</td>
+							<td align="center" bgcolor="#FFFFFF">数值预报</td>
+							<td align="center" bgcolor="#FFFFFF">2013-08-20 15:30:02</td>
+							<td align="center" bgcolor="#FFFFFF">等待播发</td>
+							<td align="center" bgcolor="#FFFFFF"><a href="#"><img
+									src="images/bf-list/ico_1.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_2.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_3.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_4.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_5.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_6.jpg"></a></td>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#FFFFFF"><input type="checkbox"></td>
+							<td align="center" bgcolor="#FFFFFF">2</td>
+							<td align="center" bgcolor="#FFFFFF">数值预报</td>
+							<td align="center" bgcolor="#FFFFFF">2013-08-20 15:30:02</td>
+							<td align="center" bgcolor="#FFFFFF">等待播发</td>
+							<td align="center" bgcolor="#FFFFFF"><a href="#"><img
+									src="images/bf-list/ico_1.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_2.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_3.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_4.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_5.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_6.jpg"></a></td>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#FFFFFF"><input type="checkbox"></td>
+							<td align="center" bgcolor="#FFFFFF">3</td>
+							<td align="center" bgcolor="#FFFFFF">数值预报</td>
+							<td align="center" bgcolor="#FFFFFF">2013-08-20 15:30:02</td>
+							<td align="center" bgcolor="#FFFFFF">等待播发</td>
+							<td align="center" bgcolor="#FFFFFF"><a href="#"><img
+									src="images/bf-list/ico_1.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_2.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_3.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_4.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_5.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_6.jpg"></a></td>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#FFFFFF"><input type="checkbox"></td>
+							<td align="center" bgcolor="#FFFFFF">4</td>
+							<td align="center" bgcolor="#FFFFFF">数值预报</td>
+							<td align="center" bgcolor="#FFFFFF">2013-08-20 15:30:02</td>
+							<td align="center" bgcolor="#FFFFFF">等待播发</td>
+							<td align="center" bgcolor="#FFFFFF"><a href="#"><img
+									src="images/bf-list/ico_1.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_2.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_3.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_4.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_5.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_6.jpg"></a></td>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#FFFFFF"><input type="checkbox"></td>
+							<td align="center" bgcolor="#FFFFFF">5</td>
+							<td align="center" bgcolor="#FFFFFF">数值预报</td>
+							<td align="center" bgcolor="#FFFFFF">2013-08-20 15:30:02</td>
+							<td align="center" bgcolor="#FFFFFF">等待播发</td>
+							<td align="center" bgcolor="#FFFFFF"><a href="#"><img
+									src="images/bf-list/ico_1.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_2.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_3.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_4.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_5.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_6.jpg"></a></td>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#FFFFFF"><input type="checkbox"></td>
+							<td align="center" bgcolor="#FFFFFF">6</td>
+							<td align="center" bgcolor="#FFFFFF">数值预报</td>
+							<td align="center" bgcolor="#FFFFFF">2013-08-20 15:30:02</td>
+							<td align="center" bgcolor="#FFFFFF">等待播发</td>
+							<td align="center" bgcolor="#FFFFFF"><a href="#"><img
+									src="images/bf-list/ico_1.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_2.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_3.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_4.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_5.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_6.jpg"></a></td>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#FFFFFF"><input type="checkbox"></td>
+							<td align="center" bgcolor="#FFFFFF">7</td>
+							<td align="center" bgcolor="#FFFFFF">数值预报</td>
+							<td align="center" bgcolor="#FFFFFF">2013-08-20 15:30:02</td>
+							<td align="center" bgcolor="#FFFFFF">等待播发</td>
+							<td align="center" bgcolor="#FFFFFF"><a href="#"><img
+									src="images/bf-list/ico_1.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_2.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_3.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_4.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_5.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_6.jpg"></a></td>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#FFFFFF"><input type="checkbox"></td>
+							<td align="center" bgcolor="#FFFFFF">8</td>
+							<td align="center" bgcolor="#FFFFFF">数值预报</td>
+							<td align="center" bgcolor="#FFFFFF">2013-08-20 15:30:02</td>
+							<td align="center" bgcolor="#FFFFFF">等待播发</td>
+							<td align="center" bgcolor="#FFFFFF"><a href="#"><img
+									src="images/bf-list/ico_1.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_2.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_3.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_4.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_5.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_6.jpg"></a></td>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#FFFFFF"><input type="checkbox"></td>
+							<td align="center" bgcolor="#FFFFFF">9</td>
+							<td align="center" bgcolor="#FFFFFF">数值预报</td>
+							<td align="center" bgcolor="#FFFFFF">2013-08-20 15:30:02</td>
+							<td align="center" bgcolor="#FFFFFF">等待播发</td>
+							<td align="center" bgcolor="#FFFFFF"><a href="#"><img
+									src="images/bf-list/ico_1.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_2.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_3.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_4.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_5.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_6.jpg"></a></td>
+						</tr>
+						<tr>
+							<td align="center" bgcolor="#FFFFFF"><input type="checkbox"></td>
+							<td align="center" bgcolor="#FFFFFF">10</td>
+							<td align="center" bgcolor="#FFFFFF">数值预报</td>
+							<td align="center" bgcolor="#FFFFFF">2013-08-20 15:30:02</td>
+							<td align="center" bgcolor="#FFFFFF">等待播发</td>
+							<td align="center" bgcolor="#FFFFFF"><a href="#"><img
+									src="images/bf-list/ico_1.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_2.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_3.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_4.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_5.jpg"></a> <a href="#"><img
+									src="images/bf-list/ico_6.jpg"></a></td>
+						</tr>
+					</table>
+
+					<div class="bf-page">
+						<div class="FL">
+							<a href="#">全选</a>/<a href="#">删除</a>
+						</div>
+						<div class="FR bf-page-list">
+							<a href="#">上一页</a> <a href="#">1</a> <a href="#" class="curr">2</a>
+							<a href="#">3</a> <a href="#">4</a> <a href="#">5</a> <a href="#">下一页</a>
+						</div>
+					</div>
+
+					<div id="con_a_2" style="display:none"></div>
+					<div id="con_a_3" style="display:none"></div>
+					<div id="con_a_4" style="display:none"></div>
+					<div id="con_a_5" style="display:none"></div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

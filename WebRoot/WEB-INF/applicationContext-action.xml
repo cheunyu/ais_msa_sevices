@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+	<!-- 海洋气象预报 -->
+	<bean id="mwfAction"
+		class="com.scyb.aisweather.vdl.action.MarineWeatherForecastAction"
+		scope="prototype">
+		<property name="mwfServiceImpl" ref="mwfServiceImpl"></property>
+	</bean>
+
+	<!-- 海洋气象预报 -->
+	<bean id="mefAction"
+		class="com.scyb.aisweather.vdl.action.MarineEnvironmentForecastAction"
+		scope="prototype">
+		<property name="mefServiceImpl" ref="mefServiceImpl"></property>
+	</bean>
+
+	<!-- get netcdf file datetime action -->
+	<bean id="netCdfDateTimeAction" class="com.scyb.aisweather.common.action.NetCdfDateTimeAction"
+		scope="prototype">
+		<property name="ncDateTimeServiceImpl" ref="ncDateTimeServiceImpl"></property>
+	</bean>
+
+	<!-- 海洋气象预警 -->
+	<bean id="mwwAction" class="com.scyb.aisweather.vdl.action.MarineWeatherWarnAction"
+		scope="prototype">
+		<property name="mwwServiceImpl" ref="mwwServiceImpl"></property>
+	</bean>
+
+	<!-- 水文气象预报 -->
+	<bean id="hwfAction"
+		class="com.scyb.aisweather.vdl.action.HydrologyWeatherForecastAction"
+		scope="prototype">
+		<property name="hwfServiceImpl" ref="hwfServiceImpl"></property>
+	</bean>
+
+	<!-- 助航标注动态 -->
+	<bean id="amdAction" class="com.scyb.aisweather.vdl.action.AidsMarkedDynamicAction"
+		scope="prototype">
+		<property name="amdServiceImpl" ref="amdServiceImpl"></property>
+	</bean>
+
+	<!-- 碍航物 -->
+	<bean id="navAction" class="com.scyb.aisweather.vdl.action.NavigationAction"
+		scope="prototype">
+		<property name="navServiceImpl" ref="navServiceImpl"></property>
+	</bean>
+
+	<!-- 施工作业 -->
+	<bean id="cwAction" class="com.scyb.aisweather.vdl.action.ConstructionWorkAction"
+		scope="prototype">
+		<property name="cwServiceImpl" ref="cwServiceImpl"></property>
+	</bean>
+
+	<!-- 笨重拖带 -->
+	<bean id="htAction" class="com.scyb.aisweather.vdl.action.HeavyTowAction"
+		scope="prototype">
+		<property name="htServiceImpl" ref="htServiceImpl"></property>
+	</bean>
+
+	<!-- 军事演习 -->
+	<bean id="maAction" class="com.scyb.aisweather.vdl.action.MilitaryActivitiyAction"
+		scope="prototype">
+		<property name="maServiceImpl" ref="maServiceImpl"></property>
+	</bean>
+
+	<!-- 船舶遇险 -->
+	<bean id="sdAction" class="com.scyb.aisweather.vdl.action.ShipDistressAction"
+		scope="prototype">
+		<property name="sdServiceImpl" ref="sdServiceImpl"></property>
+	</bean>
+
+	<!-- 划定区域 -->
+	<bean id="daAction" class="com.scyb.aisweather.vdl.action.DemarcatedAreaAction"
+		scope="prototype">
+		<property name="daServiceImpl" ref="daServiceImpl"></property>
+	</bean>
+
+	<!-- 划定区域不规则 -->
+	<bean id="diaAction"
+		class="com.scyb.aisweather.vdl.action.DemarcatedIrregulaAreaAction"
+		scope="prototype">
+		<property name="diaServiceImpl" ref="diaServiceImpl"></property>
+	</bean>
+
+	<!-- 航线推荐 -->
+	<bean id="rrAction" class="com.scyb.aisweather.vdl.action.RecommendedRouteAction"
+		scope="prototype">
+		<property name="rrServiceImpl" ref="rrServiceImpl"></property>
+	</bean>
+
+	<!-- 港口及锚地状况 -->
+	<bean id="psAction" class="com.scyb.aisweather.vdl.action.PortStatusAction"
+		scope="prototype">
+		<property name="psServiceImpl" ref="psServiceImpl"></property>
+	</bean>
+
+	<!-- 扩展船舶静态数据和航行相关信息 -->
+	<bean id="niAction" class="com.scyb.aisweather.vdl.action.NavigationalInformationAction"
+		scope="prototype">
+		<property name="niServiceImpl" ref="niServiceImpl"></property>
+	</bean>
+	
+	<!-- 中英文播发 -->
+	<bean id="textAction" class="com.scyb.aisweather.vdl.action.TextAction"
+		scope="prototype">
+		<property name="textServiceImpl" ref="textServiceImpl"></property>
+	</bean>
+
+	<!-- action test -->
+	<bean id="testAction" class="com.scyb.aisweather.test.ActionTest"></bean>
+</beans>
